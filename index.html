@@ -1,0 +1,2155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>История в названиях улиц: Октябрьское Поле</title>
+<meta name="theme-color" content="#0a101a">
+<link rel="apple-touch-icon" href="images/icon-192.png">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap');
+
+  :root {
+    --bg:            #0a101a;
+    --bg-soft:       #111c2e;
+    --bg-card:       #16243a;
+    --text:          #e8eef7;
+    --text-dim:      #9fb0c8;
+    --autumn:        #c97b27;
+    --autumn-soft:   #e09f50;
+    --winter:        #8fd3e8;
+    --winter-soft:   #5fa8c4;
+    --border:        rgba(143, 211, 232, 0.14);
+    --shadow:        0 12px 40px rgba(0,0,0,0.45);
+    --radius:        18px;
+    --font-main:     'Inter', sans-serif;
+    --font-display:  'Playfair Display', serif;
+  }
+
+  body.light-theme {
+    --bg:            #f4f7fb;
+    --bg-soft:       #ffffff;
+    --bg-card:       #ffffff;
+    --text:          #1a202c;
+    --text-dim:      #4a5568;
+    --autumn:        #d97706;
+    --autumn-soft:   #f59e0b;
+    --winter:        #0284c7;
+    --winter-soft:   #38bdf8;
+    --border:        rgba(0, 0, 0, 0.1);
+    --shadow:        0 8px 30px rgba(0,0,0,0.08);
+  }
+
+  /* Режим "Без картинок" */
+  body.no-images img,
+  body.no-images .imgph,
+  body.no-images .street-img-container,
+  body.no-images .timeline-img,
+  body.no-images .infra-card-img,
+  body.no-images .person-img,
+  body.no-images .courtyard-map,
+  body.no-images .bottom-branch,
+  body.no-images .daily-map-container {
+    display: none !important;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    font-family: var(--font-main);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    transition: background 0.4s ease, color 0.4s ease;
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M16 4 C 24 8, 28 18, 16 28 C 4 18, 8 8, 16 4 Z' fill='%23c97b27' stroke='%238e4a00' stroke-width='1'/%3E%3Cpath d='M16 6 L16 26 M16 12 L11 8 M16 12 L21 8 M16 18 L10 14 M16 18 L22 14' stroke='%238e4a00' stroke-width='0.8' fill='none'/%3E%3C/svg%3E") 16 16, auto;
+  }
+
+  a, button, .infra-card, .tab, .acc-btn, .theme-toggle, .theme-switch, .fav-btn, .hero-icon span {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M16 4 C 24 8, 28 18, 16 28 C 4 18, 8 8, 16 4 Z' fill='%23e09f50' stroke='%238e4a00' stroke-width='1'/%3E%3Cpath d='M16 6 L16 26 M16 12 L11 8 M16 12 L21 8 M16 18 L10 14 M16 18 L22 14' stroke='%238e4a00' stroke-width='0.8' fill='none'/%3E%3C/svg%3E") 16 16, pointer;
+  }
+
+  @media (hover: none) {
+    body, a, button, .infra-card, .tab, .acc-btn {
+      cursor: auto;
+    }
+  }
+
+  h1,h2,h3{ font-family: var(--font-display); font-weight: 600; letter-spacing: 0.5px; }
+  a{ color: var(--winter); text-decoration: none; transition: color .3s; }
+  a:hover{ color: var(--autumn-soft); }
+  img{ max-width:100%; display:block; }
+  section{ padding: 80px 24px; max-width: 1250px; margin: 0 auto; position:relative; z-index:1; }
+
+  .fade{ opacity:0; transform: translateY(30px); transition: opacity .8s ease, transform .8s ease; }
+  .fade.visible{ opacity:1; transform: translateY(0); }
+
+  /* ============ ХЛЕБНЫЕ КРОШКИ ============ */
+  .breadcrumbs {
+    position: fixed; top: 0; left: 0; right: 0;
+    background: rgba(10, 16, 26, 0.9);
+    backdrop-filter: blur(10px);
+    padding: 12px 24px;
+    z-index: 90;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    color: var(--text-dim);
+    display: flex; align-items: center; gap: 8px;
+    flex-wrap: wrap;
+    transform: translateY(-100%);
+    transition: transform 0.3s ease;
+  }
+  .breadcrumbs.visible { transform: translateY(0); }
+  .breadcrumbs a { color: var(--winter); }
+  .breadcrumbs a:hover { color: var(--autumn-soft); }
+  .breadcrumbs .sep { opacity: 0.5; }
+  .breadcrumbs .current { color: var(--autumn-soft); font-weight: 600; }
+
+  /* ============ ФОН ============ */
+  #particle-field{ position: fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+  .particle{ position:absolute; top:-30px; user-select:none; animation: fall linear infinite; }
+  .particle.leaf{ color: rgba(201, 123, 39, 0.6); filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5)); animation-name: fallLeaf; }
+  .particle.snow{ color: rgba(200, 230, 255, 0.5); animation-name: fallSnow; }
+  body.light-theme .particle.leaf { color: rgba(217, 119, 6, 0.7); }
+  body.light-theme .particle.snow { color: rgba(56, 189, 248, 0.6); }
+  @keyframes fallLeaf{ 0% { transform: translateY(-10vh) rotate(0deg) translateX(0); opacity: 0; } 10% { opacity: 1; } 100% { transform: translateY(110vh) rotate(360deg) translateX(50px); opacity: 0; } }
+  @keyframes fallSnow{ 0% { transform: translateY(-10vh) translateX(0); opacity: 0; } 10% { opacity: 1; } 100% { transform: translateY(110vh) translateX(-25px); opacity: 0; } }
+
+  /* ============ ПАНЕЛЬ КНОПОК ============ */
+  .toolbar {
+    position: fixed; top: 20px; right: 20px; z-index: 100;
+    display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end;
+    align-items: center;
+  }
+  .toolbar-btn {
+    background: var(--bg-card); border: 2px solid var(--border);
+    color: var(--text); width: 50px; height: 50px; border-radius: 50%;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: 22px; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  }
+  .toolbar-btn:hover { transform: scale(1.1); border-color: var(--winter-soft); }
+  .toolbar-btn.off { opacity: 0.5; }
+  .toolbar-btn.active { border-color: var(--autumn); background: rgba(201,123,39,0.15); }
+
+  /* ============ ТУМБЛЕР ТЕМЫ (ДЕТАЛИЗИРОВАННЫЙ) ============ */
+  .theme-switch {
+    position: relative;
+    width: 74px; height: 38px;
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    border-radius: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 0 4px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    overflow: hidden;
+  }
+  .theme-switch:hover { border-color: var(--winter-soft); }
+  
+  .theme-slider {
+    position: absolute;
+    width: 28px; height: 28px;
+    background: linear-gradient(135deg, #1a202c, #2d3748);
+    border-radius: 50%;
+    left: 3px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    color: #fbbf24; /* Луна */
+    z-index: 2;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  }
+  
+  body.light-theme .theme-slider {
+    transform: translateX(36px);
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+    color: #fff; /* Солнце */
+  }
+  
+  .theme-switch .icon-dark { position: absolute; left: 10px; font-size: 14px; opacity: 0.6; z-index: 1; color: var(--text-dim); transition: opacity 0.3s; }
+  .theme-switch .icon-light { position: absolute; right: 10px; font-size: 14px; opacity: 0.6; z-index: 1; color: var(--text-dim); transition: opacity 0.3s; }
+  
+  body.light-theme .theme-switch .icon-dark { opacity: 1; color: var(--text); }
+  body.light-theme .theme-switch .icon-light { opacity: 0.3; }
+
+  /* ============ КНОПКА ИЗБРАННОГО ============ */
+  .fav-btn {
+    position: absolute; top: 15px; right: 15px; z-index: 5;
+    background: rgba(10, 16, 26, 0.7); border: 1px solid var(--border);
+    color: var(--text-dim); width: 36px; height: 36px; border-radius: 50%;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: 18px; transition: all 0.3s ease;
+  }
+  .fav-btn:hover { color: var(--autumn-soft); transform: scale(1.1); }
+  .fav-btn.active { color: var(--autumn); background: rgba(201,123,39,0.2); }
+
+  /* ============ HERO ============ */
+  .hero{
+    position:relative; z-index:1; min-height: 100vh;
+    display:flex; flex-direction:column; justify-content:center; align-items:center;
+    text-align:center; padding: 100px 30px;
+    background: linear-gradient(rgba(10, 16, 26, 0.75), rgba(10, 16, 26, 0.85)), url('images/hero-bg.jpg') center/cover no-repeat;
+    background-attachment: fixed;
+    transition: min-height 0.8s cubic-bezier(0.4, 0, 0.2, 1), padding 0.8s ease;
+  }
+  body.light-theme .hero { background: linear-gradient(rgba(244, 247, 251, 0.85), rgba(244, 247, 251, 0.95)), url('images/hero-bg.jpg') center/cover no-repeat; }
+  
+  .hero.collapsed { min-height: 40vh; padding: 60px 30px; }
+
+  .hero .hero-icon{ font-size: 50px; line-height:1; margin-bottom: 24px; display:flex; gap:20px; align-items:center; justify-content:center; transition: opacity 0.5s ease; }
+  .hero.collapsed .hero-icon { opacity: 0; height: 0; margin-bottom: 0; overflow: hidden; }
+  .hero .hero-icon span { cursor: pointer; transition: transform 0.3s, filter 0.3s; }
+  .hero .hero-icon span:hover { transform: scale(1.2); }
+  
+  /* Изначально смешанный режим */
+  .hero .hero-icon .active-precip { filter: drop-shadow(0 0 15px currentColor); transform: scale(1.2); }
+  .hero .hero-icon span:not(.active-precip) { opacity: 0.5; filter: grayscale(100%); }
+  
+  .hero .hero-icon span:first-child{ color: var(--autumn-soft); }
+  .hero .hero-icon span:last-child{ color: var(--winter); }
+  
+  .hero h1{
+    font-size: clamp(32px, 6vw, 62px); max-width: 1400px;
+    background: linear-gradient(135deg, #ffffff 0%, var(--autumn-soft) 45%, var(--winter) 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    margin-bottom: 24px; line-height: 1.2;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.8); transition: font-size 0.8s ease;
+  }
+  body.light-theme .hero h1 { background: linear-gradient(135deg, #1a202c 0%, var(--autumn) 45%, var(--winter) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: none; }
+  .hero.collapsed h1 { font-size: clamp(24px, 4vw, 40px); }
+
+  .hero .subtitle{ color: var(--text); font-size: clamp(16px, 2vw, 20px); max-width: 1200px; margin-bottom: 44px; font-weight: 400; text-shadow: 0 2px 10px rgba(0,0,0,0.9); transition: opacity 0.5s ease; }
+  body.light-theme .hero .subtitle { text-shadow: none; }
+  .hero.collapsed .subtitle { display: none; }
+
+  .hero-buttons { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+
+  .btn{
+    display:inline-block; cursor:pointer; border:none;
+    padding: 16px 48px; border-radius: 50px; font-size: 18px; font-weight:600;
+    font-family: var(--font-main);
+    background: linear-gradient(135deg, var(--autumn) 0%, var(--autumn-soft) 100%);
+    color: #1a1200; transition: all .3s ease;
+    box-shadow: 0 8px 30px rgba(201,123,39,0.35);
+  }
+  .btn:hover{ transform: translateY(-3px) scale(1.02); box-shadow: 0 14px 40px rgba(201,123,39,0.5); }
+  
+  .btn-outline { background: transparent; color: var(--winter); border: 2px solid var(--winter-soft); box-shadow: none; }
+  .btn-outline:hover { background: rgba(143,211,232,0.1); color: var(--winter); box-shadow: none; }
+
+  /* ============ КОНТЕНТ ============ */
+  #main-content { display: none; opacity: 0; transition: opacity 1s ease; }
+  #main-content.visible { display: block; opacity: 1; }
+
+  .garland{
+    position: relative; z-index:1; height: 2px; max-width: 95%; margin: 0 auto;
+    background: linear-gradient(90deg, transparent, var(--autumn), var(--winter), var(--autumn), transparent);
+    opacity:.5;
+  }
+  .garland::before{ content:""; position:absolute; left:50%; top:-5px; transform:translateX(-50%); width:10px; height:10px; border-radius:50%; background: var(--winter); box-shadow: 0 0 15px var(--winter); }
+  .garland::after { content:""; position:absolute; left:30%; top:-4px; transform:translateX(-50%); width:7px; height:7px; border-radius:50%; background: var(--autumn-soft); box-shadow: 0 0 12px var(--autumn-soft); }
+
+  .section-title{
+    font-size: clamp(26px, 4vw, 42px); margin-bottom: 14px; color: var(--text);
+    display:flex; align-items:center; gap:16px;
+  }
+  .section-title svg{ flex:none; width:36px; height:36px; color: var(--winter); }
+  .section-lead{ color: var(--text-dim); margin-bottom: 40px; max-width: 900px; font-size:17.5px; font-weight: 300; }
+
+  /* ============ ТАЙМЛАЙН ============ */
+  .timeline { position: relative; max-width: 900px; margin: 0 auto; padding-left: 40px; }
+  .timeline::before { content: ''; position: absolute; left: 14px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--autumn), var(--winter), transparent); }
+  .timeline-item { position: relative; margin-bottom: 30px; }
+  .timeline-item::before { content: ''; position: absolute; left: -32px; top: 20px; width: 14px; height: 14px; border-radius: 50%; background: var(--bg); border: 3px solid var(--winter-soft); box-shadow: 0 0 10px rgba(143,211,232,0.5); transition: all 0.3s ease; z-index: 2; }
+  .timeline-item.active::before { background: var(--winter); border-color: var(--bg); box-shadow: 0 0 20px var(--winter); }
+  .timeline-header { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease; }
+  .timeline-header:hover { border-color: var(--winter-soft); background: var(--bg-soft); }
+  .timeline-header h3 { font-size: 20px; color: var(--text); margin: 0; }
+  .timeline-header .year { font-family: var(--font-display); font-size: 24px; color: var(--autumn); font-weight: 700; }
+  .timeline-header .icon { color: var(--winter-soft); font-size: 20px; transition: transform 0.3s ease; }
+  .timeline-item.active .timeline-header { border-color: var(--winter); background: var(--bg-soft); }
+  .timeline-item.active .timeline-header .icon { transform: rotate(180deg); }
+  .timeline-body { max-height: 0; overflow: hidden; transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease, margin 0.3s ease; opacity: 0; }
+  .timeline-item.active .timeline-body { max-height: 1000px; opacity: 1; margin-top: 15px; }
+  .timeline-content-inner { background: var(--bg-soft); border-radius: 12px; padding: 24px; border: 1px solid var(--border); }
+  .timeline-content-inner p { color: var(--text-dim); font-size: 16px; line-height: 1.7; margin-bottom: 16px; text-align: justify; }
+  .timeline-content-inner p:last-child { margin-bottom: 0; }
+  .timeline-img { width: 100%; height: 300px; border-radius: 8px; overflow: hidden; margin-bottom: 20px; background: var(--border); position: relative; }
+  .timeline-img img { width: 100%; height: 100%; object-fit: cover; will-change: transform; }
+
+  /* ============ ТАБЫ УЛИЦ ============ */
+  .tabs-container { margin-bottom: 40px; }
+  .tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .tab{ cursor:pointer; padding: 12px 10px; border-radius: 40px; font-size: 14px; font-weight:600; background: var(--bg-soft); color: var(--text-dim); border:1px solid var(--border); transition: all .25s ease; font-family:var(--font-main); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tab:hover{ color: var(--winter); border-color: var(--winter-soft); transform: translateY(-2px); }
+  .tab.active{ background: linear-gradient(135deg, var(--autumn), var(--autumn-soft)); color:#fff; border-color:transparent; box-shadow: 0 6px 20px rgba(201,123,39,0.3); }
+  @media (max-width: 900px) { .tabs { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 500px) { .tabs { grid-template-columns: 1fr; } }
+
+  .street-panel{ display:none; }
+  .street-panel.active{ display:grid; grid-template-columns: 1fr 1fr; gap: 40px; animation: fadeIn .5s ease; align-items: start; }
+  @keyframes fadeIn{ from{opacity:0; transform: translateY(10px);} to{opacity:1; transform: translateY(0);} }
+  .street-info h3{ font-size: 28px; color: var(--text); margin-bottom: 18px; }
+  .street-meta{ list-style:none; margin: 0 0 22px; }
+  .street-meta li{ padding: 10px 0; border-bottom:1px dashed var(--border); color: var(--text-dim); font-size:15.5px; }
+  .street-meta li strong{ color: var(--winter); font-weight:600; }
+  .street-img-container { width: 100%; height: 500px; border-radius: var(--radius); overflow: hidden; background: var(--bg-soft); position: relative; border: 1px solid var(--border); box-shadow: var(--shadow); }
+  .street-img-container img { width: 100%; height: 100%; object-fit: cover; will-change: transform; }
+  .street-img-placeholder { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; color: var(--text-dim); font-size: 16px; text-align: center; padding: 20px; }
+
+  /* ============ КАРТОЧКИ (С АНИМАЦИЕЙ СКРЫТИЯ) ============ */
+  .infra-modern-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; transition: all 0.4s ease; }
+  @media (max-width: 1024px) { .infra-modern-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .infra-modern-grid { grid-template-columns: 1fr; } }
+  
+  .infra-modern-grid.collapsed {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    margin-top: 0;
+    margin-bottom: 0;
+    pointer-events: none;
+  }
+  
+  /* Обертка для анимации */
+  .grid-wrapper {
+    overflow: hidden;
+    transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out, margin 0.5s ease;
+    max-height: 2000px;
+    opacity: 1;
+  }
+  .grid-wrapper.collapsed {
+    max-height: 0;
+    opacity: 0;
+    margin-bottom: 0;
+  }
+
+  .infra-card { 
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); 
+    overflow: hidden; display: flex; flex-direction: column; 
+    transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease; 
+    cursor: pointer; position: relative;
+  }
+  .infra-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); border-color: var(--winter-soft); }
+  .infra-card-img { width: 100%; height: 220px; position: relative; background: var(--bg-soft); overflow: hidden; }
+  .infra-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; will-change: transform; }
+  .infra-card:hover .infra-card-img img { transform: scale(1.05); }
+  .infra-card-content { padding: 24px; flex: 1; display: flex; flex-direction: column; }
+  .infra-card-content h3 { font-size: 20px; color: var(--winter); margin-bottom: 0; line-height: 1.3; }
+  .infra-tag { display: inline-block; font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; background: rgba(143,211,232,0.1); color: var(--winter); margin-bottom: 10px; align-self: flex-start; }
+  body.light-theme .infra-tag { background: rgba(2, 132, 199, 0.1); }
+  
+  .infra-card::after {
+    content: "Нажмите для подробностей";
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, var(--bg-card) 0%, transparent 100%);
+    color: var(--winter-soft); font-size: 13px; text-align: center;
+    padding: 30px 10px 10px;
+    opacity: 0; transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  .infra-card:hover::after { opacity: 1; }
+
+  /* ============ КНОПКА СКРЫТИЯ ДЛЯ СЕКЦИИ ============ */
+  .toggle-section-btn {
+    background: transparent;
+    border: 2px solid var(--border);
+    color: var(--winter);
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    margin-left: auto; /* Прижимаем вправо */
+  }
+  .toggle-section-btn:hover { background: rgba(143,211,232,0.1); border-color: var(--winter-soft); }
+  .toggle-section-btn svg { transition: transform 0.3s ease; }
+  .toggle-section-btn.collapsed svg { transform: rotate(-90deg); }
+
+  .section-header-row {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .section-header-row .section-title { margin-bottom: 0; }
+
+  /* ============ МАРШРУТ ============ */
+  .route-list { display: flex; flex-direction: column; gap: 20px; max-width: 900px; margin: 0 auto; }
+  .route-item {
+    display: flex; align-items: flex-start; gap: 20px;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px; position: relative;
+    transition: transform .3s ease, border-color .3s ease;
+  }
+  .route-item:hover { transform: translateX(5px); border-color: var(--winter-soft); }
+  .route-num {
+    flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--autumn), var(--autumn-soft));
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 18px; font-family: var(--font-display);
+  }
+  .route-content { flex: 1; }
+  .route-content h4 { font-size: 20px; color: var(--winter); margin-bottom: 8px; }
+  .route-content p { font-size: 15.5px; color: var(--text-dim); margin-bottom: 12px; line-height: 1.7; }
+  .route-content .route-actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .route-content .route-actions a {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 13px; font-weight: 600;
+    padding: 6px 16px; border-radius: 30px;
+    background: rgba(143,211,232,0.1); color: var(--winter);
+    border: 1.5px solid var(--winter-soft);
+    transition: all 0.3s ease;
+  }
+  .route-content .route-actions a:hover { background: rgba(143,211,232,0.2); }
+
+  /* ============ МАРШРУТ НА СЕГОДНЯ (КАРТА) ============ */
+  .daily-route {
+    max-width: 900px; margin: 0 auto;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 30px; position: relative;
+  }
+  .daily-route .daily-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: linear-gradient(135deg, var(--autumn), var(--autumn-soft));
+    color: #fff; border: none; padding: 12px 28px; border-radius: 40px;
+    font-family: var(--font-main); font-weight: 600; font-size: 15px;
+    cursor: pointer; transition: all 0.3s ease; margin-bottom: 20px;
+  }
+  .daily-route .daily-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(201,123,39,0.4); }
+  
+  .daily-result { display: none; margin-top: 20px; }
+  .daily-result.visible { display: block; animation: fadeIn .5s ease; }
+  
+  .daily-map-container {
+    width: 100%; height: 400px; border-radius: 12px;
+    overflow: hidden; border: 1px solid var(--border);
+    background: var(--bg-soft); position: relative;
+    margin-bottom: 15px;
+  }
+  .daily-map-container iframe { width: 100%; height: 100%; border: none; display: block; }
+  
+  .daily-text {
+    font-size: 16px; color: var(--text); line-height: 1.8;
+    padding: 20px; background: var(--bg-soft); border-radius: 12px;
+    border-left: 4px solid var(--autumn);
+  }
+  .daily-text strong { color: var(--autumn-soft); }
+
+  /* ============ СХЕМА ДВОРИКОВ ============ */
+  .courtyard-map {
+    width: 100%; max-width: 700px; margin: 0 auto; display: block;
+    background: var(--bg-soft); border-radius: var(--radius); padding: 20px;
+    border: 1px solid var(--border);
+  }
+  .courtyard-map svg { width: 100%; height: auto; }
+  .courtyard-map .house { cursor: pointer; transition: all 0.3s ease; }
+  .courtyard-map .house:hover rect { fill: var(--autumn-soft); }
+  .courtyard-map .house rect { transition: fill 0.3s ease; }
+  .courtyard-info {
+    margin-top: 24px; max-width: 700px; margin-left: auto; margin-right: auto;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px; min-height: 80px;
+    transition: all 0.3s ease;
+  }
+  .courtyard-info.empty { opacity: 0.5; font-style: italic; color: var(--text-dim); display: flex; align-items: center; justify-content: center; }
+  .courtyard-info h4 { font-size: 20px; color: var(--winter); margin-bottom: 8px; }
+  .courtyard-info p { font-size: 15.5px; color: var(--text-dim); line-height: 1.7; margin: 0; }
+
+  /* ============ ОТЗЫВЫ ============ */
+  .feedback-form {
+    max-width: 700px; margin: 0 auto;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 30px;
+  }
+  .feedback-form input,
+  .feedback-form textarea {
+    width: 100%; padding: 12px 16px; margin-bottom: 14px;
+    background: var(--bg-soft); color: var(--text);
+    border: 1.5px solid var(--border); border-radius: 10px;
+    font-family: var(--font-main); font-size: 15px;
+    transition: border-color 0.3s ease;
+  }
+  .feedback-form input:focus,
+  .feedback-form textarea:focus {
+    outline: none; border-color: var(--winter-soft);
+  }
+  .feedback-form textarea { min-height: 100px; resize: vertical; }
+  .reviews-list {
+    max-width: 700px; margin: 30px auto 0;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .review-item {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px;
+  }
+  .review-item .review-author {
+    font-weight: 600; color: var(--autumn-soft); margin-bottom: 6px;
+  }
+  .review-item .review-date {
+    font-size: 12px; color: var(--text-dim); margin-bottom: 10px;
+  }
+  .review-item .review-text {
+    color: var(--text); font-size: 15px; line-height: 1.6;
+  }
+
+  /* ============ МОДАЛЬНОЕ ОКНО ============ */
+  .modal-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(8px);
+    z-index: 1000; display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+    padding: 20px;
+  }
+  .modal-overlay.active { opacity: 1; pointer-events: auto; }
+  
+  .modal-content {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+    max-width: 800px; width: 100%; max-height: 85vh; overflow-y: auto;
+    padding: 40px; position: relative;
+    transform: scale(0.9); transition: transform 0.3s ease;
+  }
+  .modal-overlay.active .modal-content { transform: scale(1); }
+  
+  .modal-content::before {
+    content: '';
+    position: absolute; top: 0; left: 20px; right: 20px; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--autumn), var(--winter), var(--autumn), transparent);
+    opacity: 0.4; border-radius: 2px;
+  }
+  .modal-content::after {
+    content: '';
+    position: absolute; top: -4px; left: 50%; transform: translateX(-50%);
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--winter); box-shadow: 0 0 10px var(--winter);
+    opacity: 0.6;
+  }
+
+  .modal-close {
+    position: absolute; top: 15px; right: 20px;
+    background: transparent; border: none; font-size: 28px; color: var(--text-dim);
+    cursor: pointer; transition: color 0.3s ease; line-height: 1; z-index: 10;
+  }
+  .modal-close:hover { color: var(--autumn); }
+  
+  .modal-layout { display: flex; flex-direction: row; gap: 30px; align-items: flex-start; }
+  .modal-text { flex: 1; min-width: 0; }
+  .modal-text h3 { font-size: 24px; color: var(--winter); margin-bottom: 16px; }
+  .modal-text p { font-size: 16px; color: var(--text); line-height: 1.7; margin-bottom: 12px; text-align: justify; }
+  .modal-text .modal-tag { display: inline-block; font-size: 12px; font-weight: 700; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; background: rgba(143,211,232,0.15); color: var(--winter); margin-bottom: 16px; }
+
+  .modal-image-side { width: 280px; flex-shrink: 0; }
+  .modal-image-side img { width: 100%; height: auto; border-radius: 12px; display: block; }
+
+  @media (max-width: 768px) {
+    .modal-layout { flex-direction: column; }
+    .modal-image-side { width: 100%; }
+  }
+
+  /* ============ ЛИЧНОСТИ ============ */
+  .persons-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; }
+  @media (max-width: 900px) { .persons-grid { grid-template-columns: 1fr; } }
+  .person-card { 
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); 
+    overflow: hidden; display: flex; flex-direction: row; 
+    transition: transform .3s ease, border-color .3s ease; 
+    position: relative;
+  }
+  .person-card:hover { transform: translateY(-5px); border-color: var(--winter-soft); }
+  .person-img { width: 45%; position: relative; background: var(--bg-soft); overflow: hidden; }
+  .person-img img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+  .person-content { width: 55%; padding: 28px; display: flex; flex-direction: column; }
+  .person-content h3 { font-size: 24px; color: var(--text); margin-bottom: 6px; }
+  .person-content .years { color: var(--autumn); font-size: 15px; margin-bottom: 16px; font-weight: 500; }
+  .person-content p { color: var(--text); font-size: 16px; margin-bottom: 20px; flex: 1; }
+  @media (max-width: 600px) { .person-card { flex-direction: column; } .person-img { width: 100%; height: 220px; } .person-content { width: 100%; } }
+
+  .acc-btn{ 
+    align-self:flex-start; cursor:pointer; font-family:var(--font-main); font-weight:600; font-size:15px; 
+    background: transparent; color: var(--winter); border:2px solid var(--winter-soft); 
+    padding: 10px 24px; border-radius: 40px; transition: all .3s ease; 
+    display: flex; align-items: center; gap: 8px;
+  }
+  .acc-btn:hover{ background: rgba(143,211,232,0.1); transform: translateY(-2px); }
+  .acc-btn::after { content: '→'; transition: transform 0.3s ease; }
+  .acc-btn.open::after { transform: rotate(90deg); }
+
+  .person-detail-modal {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(10, 16, 26, 0.85); backdrop-filter: blur(8px);
+    z-index: 2000; display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+    padding: 20px;
+  }
+  .person-detail-modal.active { opacity: 1; pointer-events: auto; }
+  
+  .person-detail-card {
+    background: var(--bg-card); border: 1px solid var(--winter-soft); border-radius: var(--radius);
+    max-width: 750px; width: 100%; max-height: 85vh; overflow-y: auto;
+    padding: 40px; position: relative;
+    transform: scale(0.9) translateY(20px); transition: transform 0.4s ease;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  }
+  .person-detail-modal.active .person-detail-card { transform: scale(1) translateY(0); }
+  
+  .person-detail-card::before {
+    content: '';
+    position: absolute; top: 0; left: 20px; right: 20px; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--autumn), var(--winter), var(--autumn), transparent);
+    opacity: 0.4; border-radius: 2px;
+  }
+  .person-detail-card::after {
+    content: '';
+    position: absolute; top: -4px; left: 50%; transform: translateX(-50%);
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--winter); box-shadow: 0 0 10px var(--winter);
+    opacity: 0.6;
+  }
+
+  .person-detail-layout { display: flex; flex-direction: column; gap: 0; }
+  .person-detail-text { flex: 1; width: 100%; }
+  .person-detail-text h3 { font-size: 28px; color: var(--winter); margin-bottom: 6px; }
+  .person-detail-text .detail-years { color: var(--autumn); font-size: 16px; margin-bottom: 20px; font-weight: 500; }
+  .person-detail-text p { font-size: 16px; color: var(--text); line-height: 1.8; margin-bottom: 16px; text-align: justify; }
+  .person-detail-text ul { margin-left: 20px; margin-bottom: 16px; color: var(--text); }
+  .person-detail-text li { margin-bottom: 8px; }
+
+  .person-quote {
+    background: linear-gradient(135deg, rgba(201,123,39,0.1), rgba(143,211,232,0.08));
+    border-left: 4px solid var(--autumn);
+    border-radius: 0 12px 12px 0;
+    padding: 20px 24px; margin: 24px 0;
+    font-family: var(--font-display); font-style: italic;
+    font-size: 17px; color: var(--text); line-height: 1.6;
+    position: relative;
+  }
+  .person-quote::before {
+    content: '«';
+    position: absolute; top: -10px; left: 10px;
+    font-size: 60px; color: rgba(201,123,39,0.15); line-height: 1;
+    font-family: var(--font-display);
+  }
+  .person-quote .quote-author {
+    display: block; margin-top: 12px;
+    font-family: var(--font-main); font-style: normal;
+    font-size: 14px; color: var(--text-dim); text-align: right;
+  }
+
+  .person-detail-close {
+    position: absolute; top: 15px; right: 20px;
+    background: transparent; border: none; font-size: 28px; color: var(--text-dim);
+    cursor: pointer; transition: color 0.3s ease; line-height: 1; z-index: 10;
+  }
+  .person-detail-close:hover { color: var(--autumn); }
+
+  /* ============ КАРТА ============ */
+  .map-container { 
+    width: 100%; height: 500px; border-radius: var(--radius); 
+    overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow); 
+    background: var(--bg-soft); position: relative; 
+    filter: invert(90%) hue-rotate(180deg) brightness(95%) contrast(90%);
+    transition: filter 0.4s ease;
+  }
+  body.light-theme .map-container { filter: none; }
+  .map-container iframe { width: 100%; height: 100%; border: none; display: block; }
+
+  /* ============ ВЫВОД ============ */
+  .conclusion-hero { background: linear-gradient(135deg, rgba(201,123,39,0.1), rgba(143,211,232,0.1)); border: 1px solid var(--border); border-radius: var(--radius); padding: 40px; margin-bottom: 30px; position: relative; overflow: hidden; }
+  .conclusion-hero::before { content: '“'; position: absolute; top: -20px; left: 20px; font-size: 150px; font-family: var(--font-display); color: rgba(143,211,232,0.1); line-height: 1; }
+  .conclusion-hero p { font-size: clamp(18px, 2.5vw, 24px); color: var(--text); font-family: var(--font-display); line-height: 1.5; position: relative; z-index: 1; margin: 0; text-align: center; }
+  .conclusion-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 40px; }
+  @media (max-width: 900px) { .conclusion-grid { grid-template-columns: 1fr; } }
+  .conc-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 30px 24px; transition: transform 0.3s ease, border-color 0.3s ease; }
+  .conc-card:hover { transform: translateY(-5px); border-color: var(--winter-soft); }
+  .conc-card-icon { width: 48px; height: 48px; background: rgba(143,211,232,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; color: var(--winter); }
+  body.light-theme .conc-card-icon { background: rgba(2, 132, 199, 0.1); }
+  .conc-card h3 { font-size: 20px; color: var(--text); margin-bottom: 12px; }
+  .conc-card p { font-size: 15px; color: var(--text-dim); line-height: 1.7; margin: 0; }
+  .conclusion-final { background: var(--bg-soft); border-left: 4px solid var(--autumn); border-radius: 0 var(--radius) var(--radius) 0; padding: 30px 36px; }
+  .conclusion-final p { font-size: 16.5px; color: var(--text); line-height: 1.8; margin: 0; text-align: justify; }
+
+  /* ============ ВИКТОРИНА ============ */
+  .quiz-levels {
+    display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 30px;
+  }
+  .level-btn {
+    cursor: pointer; padding: 12px 24px; border-radius: 40px;
+    background: var(--bg-soft); color: var(--text-dim);
+    border: 2px solid var(--border); font-family: var(--font-main);
+    font-weight: 600; font-size: 15px; transition: all 0.3s ease;
+  }
+  .level-btn:hover { border-color: var(--winter-soft); color: var(--winter); }
+  .level-btn.active { background: linear-gradient(135deg, var(--autumn), var(--autumn-soft)); color: #fff; border-color: transparent; }
+  
+  .quiz-wrap{ background: var(--bg-card); border:1px solid var(--border); border-radius: var(--radius); padding: 44px 42px; box-shadow: var(--shadow); max-width: 900px; margin: 0 auto; }
+  .quiz-progress-text{ color: var(--text-dim); font-size:15px; margin-bottom: 12px; font-weight:500; }
+  .quiz-progress-bar{ height:8px; background: var(--bg-soft); border-radius:4px; overflow:hidden; margin-bottom: 36px; }
+  .quiz-progress-fill{ height:100%; width:0; background: linear-gradient(90deg, var(--autumn), var(--winter)); transition: width .5s ease; border-radius:4px; }
+  .quiz-question{ font-size: 24px; color: var(--text); margin-bottom: 28px; font-weight:600; line-height:1.5; }
+  .quiz-options{ display:flex; flex-direction:column; gap:14px; margin-bottom: 24px; }
+  .quiz-option{ text-align:left; cursor:pointer; font-family:var(--font-main); font-size:17px; background: var(--bg-soft); color: var(--text); border:2px solid var(--border); padding: 16px 24px; border-radius: 12px; transition: all .25s ease; }
+  .quiz-option:hover:not(:disabled){ border-color: var(--winter-soft); background: var(--bg); transform: translateX(6px); }
+  .quiz-option:disabled{ cursor: default; }
+  .quiz-option.correct{ background: rgba(63,191,127,0.2); border-color: #3fbf7f; color: var(--text); }
+  .quiz-option.wrong{ background: rgba(217,83,79,0.18); border-color: #d9534f; color: var(--text); }
+  .quiz-explain{ font-size:16px; color: var(--text-dim); min-height: 24px; margin-bottom: 20px; line-height:1.6; }
+  .quiz-nav{ display:flex; justify-content: flex-end; }
+  .quiz-result{ text-align:center; }
+  .quiz-result .score{ font-size: 52px; color: var(--autumn); font-weight:700; margin: 16px 0 10px; font-family: var(--font-display); }
+  .quiz-result p{ color: var(--text-dim); margin-bottom: 30px; font-size:18px; }
+  .hidden{ display:none !important; }
+
+  /* ============ ПОДВАЛ ============ */
+  footer{
+    position: relative; text-align:center; color: var(--text-dim); font-size:14.5px;
+    line-height:1.8; margin-top: 50px; overflow: hidden; background: var(--bg);
+  }
+  .footer-content { padding: 50px 24px 40px; position: relative; z-index: 2; }
+  .bottom-branch { width: 100%; height: 150px; margin-top: -30px; position: relative; z-index: 1; }
+  .bottom-branch svg { display: block; width: 100%; height: 100%; }
+
+  @media (max-width: 900px){
+    .street-panel.active { grid-template-columns: 1fr; }
+    section{ padding: 60px 20px; }
+    .quiz-wrap{ padding: 30px 24px; }
+    .hero h1{ font-size: clamp(26px, 7vw, 44px); }
+    .conclusion-hero { padding: 30px 20px; }
+    .conclusion-final { padding: 20px; }
+    .timeline { padding-left: 20px; }
+    .timeline::before { left: 0; }
+    .timeline-item::before { left: -8px; }
+    .hero.collapsed { min-height: 30vh; }
+    .map-container { height: 350px; }
+    .daily-map-container { height: 300px; }
+    .bottom-branch { height: 100px; margin-top: -20px; }
+    .modal-content, .person-detail-card { padding: 30px 20px; }
+    .street-img-container { height: 350px; }
+    .breadcrumbs { padding: 10px 16px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ХЛЕБНЫЕ КРОШКИ -->
+<div class="breadcrumbs" id="breadcrumbs">
+  <a href="#history">История</a>
+  <span class="sep">/</span>
+  <span class="current" id="breadcrumb-current">История местности</span>
+</div>
+
+<!-- ПАНЕЛЬ КНОПОК -->
+<div class="toolbar">
+  <div class="theme-switch" id="theme-toggle" title="Сменить тему">
+    <span class="icon-dark">🌙</span>
+    <span class="icon-light">☀️</span>
+    <div class="theme-slider"></div>
+  </div>
+  <button class="toolbar-btn" id="no-images-toggle" title="Режим без картинок">🖼️</button>
+  <button class="toolbar-btn" id="fav-open" title="Избранное">⭐</button>
+</div>
+
+<div id="particle-field" aria-hidden="true"></div>
+
+<!-- HERO -->
+<header class="hero" id="hero-section">
+  <div class="hero-icon" id="precip-controls">
+    <span class="active-precip" data-type="leaf" title="Только листья">🍁</span>
+    <span class="active-precip" data-type="snow" title="Только снег">❄</span>
+  </div>
+  <h1>История в названиях улиц:<br>Октябрьское Поле</h1>
+  <p class="subtitle">Исследовательский проект студента колледжа — о том, как городская среда хранит память о прошлом, и о том, чем живёт район сегодня. Нажимайте на кнопки, чтобы открывать факты, переключайте вкладки и проверьте свои знания в конце!</p>
+  <div class="hero-buttons">
+    <button class="btn" id="start-btn">Начать исследование</button>
+    <button class="btn btn-outline hidden" id="collapse-btn">Свернуть</button>
+  </div>
+</header>
+
+<div id="main-content">
+  <div class="garland" aria-hidden="true"></div>
+
+  <!-- 1. ИСТОРИЯ -->
+  <section id="history" class="fade">
+    <h2 class="section-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg>
+      История местности «Октябрьское Поле»
+    </h2>
+    <p class="section-lead">Как менялся облик территории на протяжении XX–XXI веков. Нажмите на год, чтобы узнать подробности.</p>
+
+    <div class="timeline">
+      <div class="timeline-item active">
+        <div class="timeline-header"><h3>Военное поле</h3><span class="year">до 1922</span><span class="icon">▼</span></div>
+        <div class="timeline-body">
+          <div class="timeline-content-inner">
+            <div class="timeline-img"><img src="images/oktyabrskoe-pole-history.jpg" alt="Историческая карта" loading="lazy" decoding="async" onerror="this.parentNode.style.display='none'"></div>
+            <p>До 1921–1922 годов эта территория на северо-западе Москвы называлась Военным полем и являлась частью обширного Ходынского поля. С середины XIX века здесь располагались военные лагеря, части Московского гарнизона, учебные укрепления, артиллерийские склады и пушечные мишени. На поле проводились строевые смотры и военные учения.</p>
+            <p>1 мая 1918 года здесь прошёл военный парад Красной армии, который принимал Владимир Ленин. Осенью 1914 года (в начале Первой мировой войны) солдаты построили здесь радиостанцию для связи с союзниками по Антанте. Позже она превратилась в Октябрьское военное радиополе с высокими антеннами.</p>
+            <p>В 1907 году через поле прошла Московская окружная железная дорога, где архитектор Александр Померанцев построил вокзальное здание станции «Военное поле».</p>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-header"><h3>Переименование</h3><span class="year">1921–1922</span><span class="icon">▼</span></div>
+        <div class="timeline-body">
+          <div class="timeline-content-inner">
+            <p>В 1921 году, в ознаменование 4-й годовщины Октябрьской революции, располагавшиеся в юго-восточной части Ходынского поля Николаевские казармы были переименованы в Октябрьские, так как в них размещалась 1-я запасная артиллерийская бригада, принимавшая активное участие в Октябрьском вооружённом восстании. Одновременно Ходынское поле было переименовано в Октябрьское. В дальнейшем под названием Октябрьское поле стали понимать только бывшее Военное поле.</p>
+            <div class="timeline-img" style="margin-top: 15px;"><img src="images/history-1921.jpg" alt="Октябрьское поле в 1921" loading="lazy" decoding="async" onerror="this.parentNode.style.display='none'"></div>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-header"><h3>Включение в черту города</h3><span class="year">1937</span><span class="icon">▼</span></div>
+        <div class="timeline-body">
+          <div class="timeline-content-inner"><p>В 1937 году территория официально вошла в состав Москвы, и здесь началось возведение первых капитальных ведомственных и жилых домов (например, на улице Народного Ополчения).</p></div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-header"><h3>Послевоенная застройка и «Немецкие дворики»</h3><span class="year">1948–1950-е</span><span class="icon">▼</span></div>
+        <div class="timeline-body">
+          <div class="timeline-content-inner">
+            <p>С 1948 года разворачивается активное жилищное строительство. Были созданы номерные улицы Октябрьского Поля (с 1-й по 10-ю).</p>
+            <p>Под руководством архитектора Дмитрия Чечулина был возведён знаменитый квартал малоэтажных (2–3 этажа) домов с уютными зелёными дворами и фонтанами (построен в 1948–1952 годах, часто неофициально называемый «Немецким двориком»). Дома предназначались для военных и офицеров.</p>
+            <p>В 1940-х годах поблизости начинает формироваться научный кластер (будущий Курчатовский институт / Лаборатория № 2).</p>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-header"><h3>Поздний советский период</h3><span class="year">1960–1970-е</span><span class="icon">▼</span></div>
+        <div class="timeline-body">
+          <div class="timeline-content-inner">
+            <p>В 1960–1970-х годах номерные улицы Октябрьского Поля получили имена советских военачальников и маршалов (Бирюзова, Конева, Соколовского, Тухачевского и др.).</p>
+            <p>30 декабря 1972 года открылась станция метро «Октябрьское поле» (архитекторы Н. А. Алёшина, Л. Н. Зайцева). Станция отделана серым коелгинским мрамором и анодированным алюминием с революционной тематикой. Впервые в практике московского метростроения колонны станционного зала облицованы анодированным алюминием. Стены покрыты светлым мрамором, пол из гранита и мрамора.</p>
+            <p>На месте старых деревянных строений и полей вырастают типовые панельные и блочные дома, район превращается в типичный спально-научный массив северо-запада столицы.</p>
+            <div class="timeline-img" style="margin-top: 15px;"><img src="images/history-now.jpg" alt="Октябрьское поле сейчас" loading="lazy" decoding="async" onerror="this.parentNode.style.display='none'"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="garland" aria-hidden="true"></div>
+
+  <!-- 2. УЛИЦЫ -->
+  <section id="streets" class="fade">
+    <h2 class="section-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 21V8l8-5 8 5v13M9 21v-5h6v5M8 10h.01M12 10h.01M16 10h.01"/></svg>
+      Улицы и их названия
+    </h2>
+    <p class="section-lead">Нажмите на кнопку с названием улицы, чтобы узнать её историю.</p>
+
+    <div class="tabs-container">
+      <div class="tabs" id="streetTabs">
+        <button class="tab active" data-target="bir">Улица Маршала Бирюзова</button>
+        <button class="tab" data-target="sok">Улица Маршала Соколовского</button>
+        <button class="tab" data-target="kon">Улица Маршала Конева</button>
+      </div>
+    </div>
+
+    <div class="street-panel active" id="bir">
+      <div class="street-info">
+        <h3>Улица Маршала Бирюзова</h3>
+        <ul class="street-meta">
+          <li><strong>Прежнее название:</strong> 6-я улица Октябрьского Поля</li>
+          <li><strong>Переименована:</strong> 1965 год</li>
+          <li><strong>В честь:</strong> Маршала Советского Союза С. С. Бирюзова (1904–1964)</li>
+        </ul>
+        <p>1948 год: Появление улицы на карте Москвы под названием 6-я улица Октябрьского Поля, так как она относилась к застройке территории бывшего Октябрьского военного поля.</p>
+        <p>1965 год: Улица переименована в честь Героя Советского Союза, маршала Советского Союза Сергея Семёновича Бирюзова (1904–1964), трагически погибшего в авиакатастрофе в Югославии. Переименование было приурочено к 20-летию Победы в Великой Отечественной войне.</p>
+        <p>1966 год: Улица была продлена до площади Академика Курчатова.</p>
+        <p>Сергей Семёнович Бирюзов (1904/1905–1964) — выдающийся советский военачальник, Маршал Советского Союза (1955) и Герой Советского Союза (1958). Он прошёл путь от курсанта до начальника Генерального штаба Вооружённых сил СССР и внёс огромный вклад в победу в Великой Отечественной войне, а также в развитие советских войск ПВО и ракетных войск.</p>
+      </div>
+      <div class="street-img-container">
+        <img src="images/ulitsa-biryuzova-new.jpg" alt="Улица Маршала Бирюзова" loading="lazy" decoding="async" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="street-img-placeholder" style="display:none;">Фото улицы Маршала Бирюзова</div>
+      </div>
+    </div>
+
+    <div class="street-panel" id="sok">
+      <div class="street-info">
+        <h3>Улица Маршала Соколовского</h3>
+        <ul class="street-meta">
+          <li><strong>Прежнее название:</strong> 2-я улица Октябрьского Поля</li>
+          <li><strong>Переименована:</strong> 3 сентября 1968 года</li>
+          <li><strong>В честь:</strong> Маршала Советского Союза В. Д. Соколовского (1897–1968)</li>
+        </ul>
+        <p>Изначально она называлась 2-й улицей Октябрьского Поля.</p>
+        <p>3 сентября 1968 года улицу переименовали в честь Василия Даниловича Соколовского (1897–1968) — Маршала Советского Союза, Героя Советского Союза, участника обороны Москвы и Великой Отечественной войны. Переименование произошло вскоре после его смерти в мае 1968 года.</p>
+        <p>В конце 1940-х — начале 1950-х годов здесь развернулось строительство жилых домов (в частности, дом № 6), входящих в известный комплекс «на Октябрьском поле» (или «немецкая слобода» / «немецкий дворик»). Эти малоэтажные здания в стиле неоклассицизма и сталинского ампира проектировались под руководством архитектора Д. Н. Чечулина.</p>
+        <p>Позднее, в конце XX и начале XXI века, район продолжил развиваться: здесь появились современные жилые комплексы (например, ЖК «Эльсинор» по адресам ул. Маршала Соколовского, 5–7) и новые высотные дома. На улице располагается Институт музыки имени А. Г. Шнитке (дом № 10).</p>
+        <p>Василий Данилович Соколовский (1897–1968) — выдающийся советский военачальник и военный теоретик, Маршал Советского Союза (1946) и Герой Советского Союза (1945). Он прославился как талантливый штабной работник, участвовавший в планировании и проведении ключевых сражений Великой Отечественной войны, включая битву за Москву и взятие Берлина.</p>
+      </div>
+      <div class="street-img-container">
+        <img src="images/street-sokolovskogo.jpg" alt="Улица Маршала Соколовского" loading="lazy" decoding="async" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="street-img-placeholder" style="display:none;">Фото улицы Маршала Соколовского</div>
+      </div>
+    </div>
+
+    <div class="street-panel" id="kon">
+      <div class="street-info">
+        <h3>Улица Маршала Конева</h3>
+        <ul class="street-meta">
+          <li><strong>Создана:</strong> 1973 год</li>
+          <li><strong>Образована:</strong> путём слияния 3-й улицы Октябрьского Поля и 2-го Волоколамского проезда</li>
+          <li><strong>В честь:</strong> Маршала Советского Союза И. С. Конева (1897–1973)</li>
+        </ul>
+        <p>Улица появилась на карте Москвы в 1973 году. Она образовалась путем слияния двух существовавших ранее проездов — 3-й улицы Октябрьского Поля и 2-го Волоколамского проезда.</p>
+        <p>Имя присвоено в честь Дважды Героя Советского Союза, Маршала Советского Союза Ивана Степановича Конева (1897–1973). Решение приняли вскоре после смерти полководца в 1973 году.</p>
+        <p>Район Октябрьского поля, где проходит улица, начал активно застраиваться в 1950–1970-х годах. На улице находятся известные малоэтажные жилые дома в стиле сталинского неоклассицизма («немецкая слобода» / «на Октябрьском поле»), построенные в 1947–1952 годах по проекту группы архитекторов под руководством Д. Чечулина. Часть этих домов входит в список объектов культурного наследия.</p>
+        <p>Иван Степанович Конев (16 декабря 1897 — 21 мая 1973) — выдающийся советский военачальник и государственный деятель, Маршал Советского Союза (1944), дважды Герой Советского Союза (1944, 1945), кавалер ордена «Победа» (1945).</p>
+      </div>
+      <div class="street-img-container">
+        <img src="images/street-koneva.jpg" alt="Улица Маршала Конева" loading="lazy" decoding="async" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="street-img-placeholder" style="display:none;">Фото улицы Маршала Конева</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="garland" aria-hidden="true"></div>
+
+  <!-- 3. ЛИЧНОСТИ -->
+  <section id="persons" class="fade">
+    <h2 class="section-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 12a5 5 0 100-10 5 5 0 000 10zM4 22a8 8 0 0116 0"/></svg>
+      Исторические личности
+    </h2>
+    <p class="section-lead">Люди, чьи имена носят улицы Октябрьского Поля.</p>
+
+    <div class="persons-grid">
+      <div class="person-card">
+        <div class="person-img"><img src="images/biryuzov.jpg" alt="Портрет С. С. Бирюзова" loading="lazy" decoding="async" onerror="this.parentNode.style.background='var(--bg-soft)'; this.style.display='none'"></div>
+        <div class="person-content">
+          <h3>Сергей Семёнович Бирюзов</h3>
+          <div class="years">1904–1964</div>
+          <p>Маршал Советского Союза, Герой Советского Союза. Участник Великой Отечественной войны, начальник Генерального штаба.</p>
+          <button class="acc-btn" data-acc="birAcc">Подробнее</button>
+        </div>
+      </div>
+
+      <div class="person-card">
+        <div class="person-img"><img src="images/sokolovsky.jpg" alt="Портрет В. Д. Соколовского" loading="lazy" decoding="async" onerror="this.parentNode.style.background='var(--bg-soft)'; this.style.display='none'"></div>
+        <div class="person-content">
+          <h3>Василий Данилович Соколовский</h3>
+          <div class="years">1897–1968</div>
+          <p>Маршал Советского Союза, Герой Советского Союза. Участник обороны Москвы и Великой Отечественной войны, военный теоретик.</p>
+          <button class="acc-btn" data-acc="sokAcc">Подробнее</button>
+        </div>
+      </div>
+
+      <div class="person-card">
+        <div class="person-img"><img src="images/konev.jpg" alt="Портрет И. С. Конева" loading="lazy" decoding="async" onerror="this.parentNode.style.background='var(--bg-soft)'; this.style.display='none'"></div>
+        <div class="person-content">
+          <h3>Иван Степанович Конев</h3>
+          <div class="years">1897–1973</div>
+          <p>Маршал Советского Союза, дважды Герой Советского Союза. Кавалер ордена «Победа». Выдающийся полководец Великой Отечественной войны.</p>
+          <button class="acc-btn" data-acc="konAcc">Подробнее</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="garland" aria-hidden="true"></div>
+
+  <!-- 4. ПАМЯТНИКИ -->
+  <section id="sights" class="fade">
+    <h2 class="section-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      Памятники и мемориальные объекты
+    </h2>
+    <p class="section-lead">Район богат на исторические места и монументы, связанные с Великой Отечественной войной.</p>
+
+    <div class="grid-wrapper" id="sights-wrapper">
+      <div class="infra-modern-grid">
+        <div class="infra-card" data-modal="sight1">
+          <button class="fav-btn" data-fav="sight1">☆</button>
+          <div class="infra-card-img"><img src="images/sight-t34.jpg" alt="Танк Т-34" loading="lazy" decoding="async" onerror="this.style.display='none'"></div>
+          <div class="infra-card-content">
+            <span class="infra-tag">Мемориал</span>
+            <h3>Памятник-танк Т-34</h3>
+          </div>
+        </div>
+        <div class="infra-card" data-modal="sight2">
+          <button class="fav-btn" data-fav="sight2">☆</button>
+          <div class="infra-card-img"><img src="images/sight-rybalko.jpg" alt="Стела Рыбалко" loading="lazy" decoding="async" onerror="this.style.display='none'"></div>
+          <div class="infra-card-content">
+            <span class="infra-tag">Памятник</span>
+            <h3>Стела маршалу П. С. Рыбалко</h3>
+          </div>
+        </div>
+        <div class="infra-card" data-modal="sight3">
+          <button class="fav-btn" data-fav="sight3">☆</button>
+          <div class="infra-card-img"><img src="images/sight-vorota.jpg" alt="Исторические ворота" loading="lazy" decoding="async" onerror="this.style.display='none'"></div>
+          <div class="infra-card-content">
+            <span class="infra-tag">Памятник</span>
+            <h3>Исторические ворота В/Ч 67748</h3>
+          </div>
+        </div>
+        <div class="infra-card" data-modal="sight4">
+          <button class="fav-btn" data-fav="sight4">☆</button>
+          <div class="infra-card-img"><img src="images/sight-hram.jpg" alt="Храм Скоропослушница" loading="lazy" decoding="async" onerror="this.style.display='none'"></div>
+          <div class="infra-card-content">
+            <span class="infra-tag">Храм</span>
+            <h3>Храм иконы «Скоропослушница»</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="garland" aria-hidden="true"></div>
+
+  <!-- 5. ТОРГОВЫЕ ЦЕНТРЫ -->
+  <section id="malls" class="fade">
+    <h2 class="section-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg>
+      Торговые центры
+    </h2>
+    <p class="section-lead">Где можно совместить шопинг и досуг.</p>
+
+    <div class="grid-wrapper" id="malls-wrapper">
+      <div class="infra-modern-grid">
+        <div class="infra-card" data-modal="mall1">
+          <button class="fav-btn" data-fav="mall1">☆</button>
+          <div class="infra-card-img"><img src="images/mall-5avenue.jpg" alt="ТЦ Пятая Авеню" loading="lazy" decoding="async" onerror="this.style.display='none'"></div>
+          <div class="infra-card-content">
+            <span class="infra-tag">ТЦ</span>
+            <h3>ТЦ «Пятая Авеню»</h3>
+          </div>
+        </div>
+        <div class="infra-card" data-modal="mall2">
+          <button class="fav-btn" data-fav="mall2">☆</button>
+          <div class="infra-card-img"><img src="images/mall-horosho.jpg" alt="ТРЦ Хорошо!" loading="lazy" decoding="async" onerror="this.style.display='none'"></div>
+          <div class="infra-card-content">
+            <span class="infra-tag">ТРЦ</span>
+            <h3>ТРЦ «Хорошо!»</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="garland" aria-hidden="true"></div>
+
+  <!-- 6. КАФЕ (С КНОПКОЙ СКРЫТИЯ) -->
+  <section id="food" class="fade">
+    <div class="section-header-row">
+      <h2 class="section-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zM6 1v3M10 1v3M14 1v3"/></svg>
+        Где поесть и выпить кофе
+      </h2>
+      <button class="toggle-section-btn" id="toggle-food-btn" title="Скрыть/показать карточки">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </button>
+    </div>
+    <p class="section-lead">Рядом с метро Октябрьское поле и Панфиловская есть много хороших ресторанов и кафе.</p>
+
+    <div class="grid-wrapper" id="food-wrapper">
+      <div class="infra-modern-grid">
+        <div class="infra-card" data-modal="food1">
+          <button class="fav-btn" data-fav="food1">☆</button>
+          <div class="infra-card-img"><img src="images/cafe-botteganova.jpg" alt="Botteganova" loading="lazy" decoding="async" onerror="this.style.display='none'"></div>
+          <div class="infra-card-content">
+            <span class="infra-tag">Итальянская кухня</span>
+            <h3>Botteganova</h3>
+          </div>
+        </div>
+        <div class="infra-card" data-modal="food2">
+          <button class="fav-btn" data-fav="food2">☆</button>
+          <div class="infra-card-img"><img src="images/cafe-primavera.jpg" alt="Примавера" loading="lazy" decoding="async" onerror="this.style.display='none'"></div>
+          <div class="infra-card-content">
+            <span class="infra-tag">Итальянская кухня</span>
+            <h3>Примавера</h3>
+          </div>
+        </div>
+        <div class="infra-card" data-modal="food3">
+          <button class="fav-btn" data-fav="food3">☆</button>
+          <div class="infra-card-img"><img src="images/cafe-arts.jpg" alt="Cafe de Arts" loading="lazy" decoding="async" onerror="this.style.display='none'"></div>
+          <div class="infra-card-content">
+            <span class="infra-tag">Европейская кухня</span>
+            <h3>Cafe de Arts</h3>
+          </div>
+        </div>
+        <div class="infra-card" data-modal="food4">
+          <button class="fav-btn" data-fav="food4">☆</button>
+          <div class="infra-card-img"><img src="images/cafe-kvartal.jpg" alt="KVARTAL Green Garden" loading="lazy" decoding="async" onerror="this.style.display='none'"></div>
+          <div class="infra-card-content">
+            <span class="infra-tag">Ресторан</span>
+            <h3>KVARTAL Green Garden</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="garland" aria-hidden="true"></div>
+
+  <!-- 7. КУЛЬТУРА -->
+  <section id="culture" class="fade">
+    <h2 class="section-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      Культура и развлечения
+    </h2>
+    <p class="section-lead">Куда можно сходить обычному студенту или туристу?</p>
+
+    <div class="grid-wrapper" id="culture-wrapper">
+      <div class="infra-modern-grid">
+        <div class="infra-card" data-modal="cult1">
+          <button class="fav-btn" data-fav="cult1">☆</button>
+          <div class="infra-card-img"><img src="images/cult-yunost.jpg" alt="Кинотеатр Москино Юность" loading="lazy" decoding="async" onerror="this.style.display='none'"></div>
+          <div class="infra-card-content">
+            <span class="infra-tag">Кино</span>
+            <h3>Кинотеатр «Москино Юность»</h3>
+          </div>
+        </div>
+        <div class="infra-card" data-modal="cult2">
+          <button class="fav-btn" data-fav="cult2">☆</button>
+          <div class="infra-card-img"><img src="images/gallery-khodynka.jpg" alt="Галерея Ходынка" loading="lazy" decoding="async" onerror="this.style.display='none'"></div>
+          <div class="infra-card-content">
+            <span class="infra-tag">Арт</span>
+            <h3>Галерея «Ходынка»</h3>
+          </div>
+        </div>
+        <div class="infra-card" data-modal="cult3">
+          <button class="fav-btn" data-fav="cult3">☆</button>
+          <div class="infra-card-img"><img src="images/dom-romansa.jpg" alt="Дом романса" loading="lazy" decoding="async" onerror="this.style.display='none'"></div>
+          <div class="infra-card-content">
+            <span class="infra-tag">Музыка</span>
+            <h3>Культурный центр «Дом романса»</h3>
+          </div>
+        </div>
+        <div class="infra-card" data-modal="cult4">
+          <button class="fav-btn" data-fav="cult4">☆</button>
+          <div class="infra-card-img"><img src="images/cult-minerals.jpg" alt="Музей самоцветов" loading="lazy" decoding="async" onerror="this.style.display='none'"></div>
+          <div class="infra-card-content">
+            <span class="infra-tag">Музей</span>
+            <h3>Музей самоцветов</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="garland" aria-hidden="true"></div>
+
+  <!-- 8. МАРШРУТ ЭКСКУРСИИ -->
+  <section id="route" class="fade">
+    <h2 class="section-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      Маршрут экскурсии по Октябрьскому Полю
+    </h2>
+    <p class="section-lead">Как пройти от метро «Октябрьское поле» к памятнику Т-34, «Немецкому дворику» и другим точкам района.</p>
+
+    <div class="route-list">
+      <div class="route-item">
+        <div class="route-num">1</div>
+        <div class="route-content">
+          <h4>Станция метро «Октябрьское поле»</h4>
+          <p>Стартовая точка маршрута. Выходите из метро к улицам Маршала Бирюзова и Народного Ополчения. Это одна из ключевых транспортных артерий района.</p>
+          <div class="route-actions">
+            <a href="https://yandex.ru/maps/?text=метро%20Октябрьское%20поле" target="_blank">📍 Открыть в Яндекс.Картах</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="route-item">
+        <div class="route-num">2</div>
+        <div class="route-content">
+          <h4>Памятник-танк Т-34</h4>
+          <p>От метро двигайтесь по улице Маршала Бирюзова в сторону улицы Народного Ополчения. В сквере на пересечении улиц установлен легендарный танк Т-34-85, посвящённый 40-летию Победы. Рядом — таблички с биографиями Героев Советского Союза.</p>
+          <div class="route-actions">
+            <a href="https://yandex.ru/maps/?text=памятник%20танк%20Т-34%20Октябрьское%20поле" target="_blank">📍 Открыть в Яндекс.Картах</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="route-item">
+        <div class="route-num">3</div>
+        <div class="route-content">
+          <h4>«Немецкий дворик» (квартал малоэтажной застройки)</h4>
+          <p>Пройдите от танка по улице Народного Ополчения до пересечения с улицей Маршала Соколовского. Квартал между улицами Маршала Бирюзова, Маршала Соколовского, Маршала Конева и Маршала Мерецкова — это знаменитые «Немецкие дворики», построенные в 1948–1952 годах под руководством архитектора Д. Н. Чечулина. Уютные дворы с фонтанами и малоэтажные дома в стиле сталинского неоклассицизма.</p>
+          <div class="route-actions">
+            <a href="https://yandex.ru/maps/?text=улица%20Маршала%20Соколовского%20Москва" target="_blank">📍 Открыть в Яндекс.Картах</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="route-item">
+        <div class="route-num">4</div>
+        <div class="route-content">
+          <h4>Храм иконы Божией Матери «Скоропослушница»</h4>
+          <p>Завершающая точка маршрута. Храм расположен по адресу: улица Маршала Рыбалко, 8. Это самое старое историческое здание и духовный памятник этой местности.</p>
+          <div class="route-actions">
+            <a href="https://yandex.ru/maps/?text=храм%20Скоропослушница%20Маршала%20Рыбалко%208" target="_blank">📍 Открыть в Яндекс.Картах</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="garland" aria-hidden="true"></div>
+
+  <!-- 9. МАРШРУТ НА СЕГОДНЯ (КАРТА) -->
+  <section id="daily-route" class="fade">
+    <h2 class="section-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zM12 6v6l4 2"/></svg>
+      Маршрут на сегодня
+    </h2>
+    <p class="section-lead">Не знаете, с чего начать прогулку? Нажмите кнопку — и получите случайный маршрут по району с интерактивной картой.</p>
+
+    <div class="daily-route">
+      <button class="daily-btn" id="daily-btn">🎲 Сгенерировать маршрут</button>
+      
+      <div class="daily-result" id="daily-result">
+        <div class="daily-map-container" id="daily-map">
+          <!-- Сюда будет вставляться iframe карты -->
+        </div>
+        <div class="daily-text" id="daily-text">
+          <!-- Сюда будет вставляться текст маршрута -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="garland" aria-hidden="true"></div>
+
+  <!-- 10. ИНТЕРЕСНЫЕ ФАКТЫ -->
+  <section id="facts" class="fade">
+    <h2 class="section-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      Интересные факты об Октябрьском Поле
+    </h2>
+    <p class="section-lead">Несколько любопытных деталей, которые делают историю района живой.</p>
+
+    <div class="grid-wrapper" id="facts-wrapper">
+      <div class="infra-modern-grid">
+        <div class="infra-card" data-modal="fact1">
+          <button class="fav-btn" data-fav="fact1">☆</button>
+          <div class="infra-card-img"><img src="images/fact-parad.jpg" alt="Парад с Лениным" loading="lazy" decoding="async" onerror="this.style.display='none'"></div>
+          <div class="infra-card-content">
+            <span class="infra-tag">История</span>
+            <h3>Парад с Лениным</h3>
+          </div>
+        </div>
+        <div class="infra-card" data-modal="fact2">
+          <button class="fav-btn" data-fav="fact2">☆</button>
+          <div class="infra-card-img"><img src="images/german-courtyards.jpg" alt="Немецкие дворики" loading="lazy" decoding="async" onerror="this.style.display='none'"></div>
+          <div class="infra-card-content">
+            <span class="infra-tag">Архитектура</span>
+            <h3>«Немецкие дворики»</h3>
+          </div>
+        </div>
+        <div class="infra-card" data-modal="fact3">
+          <button class="fav-btn" data-fav="fact3">☆</button>
+          <div class="infra-card-img"><img src="images/radio-nashe.jpg" alt="Родина радио «Наше»" loading="lazy" decoding="async" onerror="this.style.display='none'"></div>
+          <div class="infra-card-content">
+            <span class="infra-tag">Культура</span>
+            <h3>Родина радио «Наше»</h3>
+          </div>
+        </div>
+        <div class="infra-card" data-modal="fact4">
+          <button class="fav-btn" data-fav="fact4">☆</button>
+          <div class="infra-card-img"><img src="images/street-voennoe-pole.jpg" alt="Улица Военное Поле" loading="lazy" decoding="async" onerror="this.style.display='none'"></div>
+          <div class="infra-card-content">
+            <span class="infra-tag">Топонимика</span>
+            <h3>Улица Военное Поле</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="garland" aria-hidden="true"></div>
+
+  <!-- 11. СХЕМА ДВОРИКОВ -->
+  <section id="courtyard" class="fade">
+    <h2 class="section-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg>
+      Интерактивная схема «Немецких двориков»
+    </h2>
+    <p class="section-lead">Нажмите на любой дом на схеме, чтобы узнать его историю и особенности.</p>
+
+    <div class="courtyard-map">
+      <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+        <rect width="600" height="400" fill="var(--bg-soft)" rx="12"/>
+        <text x="300" y="30" text-anchor="middle" fill="var(--text-dim)" font-size="14" font-family="Inter">ул. Маршала Бирюзова</text>
+        <text x="300" y="380" text-anchor="middle" fill="var(--text-dim)" font-size="14" font-family="Inter">ул. Маршала Соколовского</text>
+        <text x="30" y="200" text-anchor="middle" fill="var(--text-dim)" font-size="14" font-family="Inter" transform="rotate(-90 30 200)">ул. Маршала Конева</text>
+        <text x="570" y="200" text-anchor="middle" fill="var(--text-dim)" font-size="14" font-family="Inter" transform="rotate(90 570 200)">ул. Маршала Мерецкова</text>
+
+        <g class="house" data-house="1"><rect x="100" y="80" width="80" height="60" fill="var(--bg-card)" stroke="var(--winter-soft)" stroke-width="2" rx="4"/><text x="140" y="115" text-anchor="middle" fill="var(--text)" font-size="16" font-family="Inter" font-weight="600">Дом 1</text></g>
+        <g class="house" data-house="2"><rect x="220" y="80" width="80" height="60" fill="var(--bg-card)" stroke="var(--winter-soft)" stroke-width="2" rx="4"/><text x="260" y="115" text-anchor="middle" fill="var(--text)" font-size="16" font-family="Inter" font-weight="600">Дом 2</text></g>
+        <g class="house" data-house="3"><rect x="340" y="80" width="80" height="60" fill="var(--bg-card)" stroke="var(--winter-soft)" stroke-width="2" rx="4"/><text x="380" y="115" text-anchor="middle" fill="var(--text)" font-size="16" font-family="Inter" font-weight="600">Дом 3</text></g>
+        <g class="house" data-house="4"><rect x="460" y="80" width="80" height="60" fill="var(--bg-card)" stroke="var(--winter-soft)" stroke-width="2" rx="4"/><text x="500" y="115" text-anchor="middle" fill="var(--text)" font-size="16" font-family="Inter" font-weight="600">Дом 4</text></g>
+        <g class="house" data-house="5"><rect x="100" y="180" width="80" height="60" fill="var(--bg-card)" stroke="var(--winter-soft)" stroke-width="2" rx="4"/><text x="140" y="215" text-anchor="middle" fill="var(--text)" font-size="16" font-family="Inter" font-weight="600">Дом 5</text></g>
+        <g class="house" data-house="6"><rect x="220" y="180" width="80" height="60" fill="var(--bg-card)" stroke="var(--winter-soft)" stroke-width="2" rx="4"/><text x="260" y="215" text-anchor="middle" fill="var(--text)" font-size="16" font-family="Inter" font-weight="600">Дом 6</text></g>
+        <g class="house" data-house="7"><rect x="340" y="180" width="80" height="60" fill="var(--bg-card)" stroke="var(--winter-soft)" stroke-width="2" rx="4"/><text x="380" y="215" text-anchor="middle" fill="var(--text)" font-size="16" font-family="Inter" font-weight="600">Дом 7</text></g>
+        <g class="house" data-house="8"><rect x="460" y="180" width="80" height="60" fill="var(--bg-card)" stroke="var(--winter-soft)" stroke-width="2" rx="4"/><text x="500" y="215" text-anchor="middle" fill="var(--text)" font-size="16" font-family="Inter" font-weight="600">Дом 8</text></g>
+        <g class="house" data-house="9"><rect x="100" y="280" width="80" height="60" fill="var(--bg-card)" stroke="var(--winter-soft)" stroke-width="2" rx="4"/><text x="140" y="315" text-anchor="middle" fill="var(--text)" font-size="16" font-family="Inter" font-weight="600">Дом 9</text></g>
+        <g class="house" data-house="10"><rect x="220" y="280" width="80" height="60" fill="var(--bg-card)" stroke="var(--winter-soft)" stroke-width="2" rx="4"/><text x="260" y="315" text-anchor="middle" fill="var(--text)" font-size="16" font-family="Inter" font-weight="600">Дом 10</text></g>
+        <g class="house" data-house="11"><rect x="340" y="280" width="80" height="60" fill="var(--bg-card)" stroke="var(--winter-soft)" stroke-width="2" rx="4"/><text x="380" y="315" text-anchor="middle" fill="var(--text)" font-size="16" font-family="Inter" font-weight="600">Дом 11</text></g>
+        <g class="house" data-house="12"><rect x="460" y="280" width="80" height="60" fill="var(--bg-card)" stroke="var(--winter-soft)" stroke-width="2" rx="4"/><text x="500" y="315" text-anchor="middle" fill="var(--text)" font-size="16" font-family="Inter" font-weight="600">Дом 12</text></g>
+      </svg>
+    </div>
+
+    <div class="courtyard-info empty" id="courtyard-info">
+      Нажмите на дом, чтобы увидеть информацию
+    </div>
+  </section>
+
+  <div class="garland" aria-hidden="true"></div>
+
+  <!-- 12. ВЫВОД (РАСШИРЕННЫЙ) -->
+  <section id="conclusion" class="fade">
+    <h2 class="section-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      Вывод
+    </h2>
+    <div class="conclusion-hero">
+      <p>Октябрьское Поле — уникальный район, в котором переплелись военная история, архитектурное наследие и современная городская среда. Изучив его историю, улицы и достопримечательности, можно сделать вывод о его высокой ценности для Москвы.</p>
+    </div>
+    <div class="conclusion-grid">
+      <div class="conc-card">
+        <div class="conc-card-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+        <h3>История и архитектура</h3>
+        <p>Район прошел путь от Военного поля до современного жилого массива. Особое место занимают «Немецкие дворики» (1948–1952 гг., арх. Д. Н. Чечулин) — кварталы малоэтажной застройки в стиле сталинского неоклассицизма с уютными дворами и фонтанами. Улицы района носят имена выдающихся маршалов: Бирюзова, Соколовского, Конева, что подчеркивает историческую память места.</p>
+      </div>
+      <div class="conc-card">
+        <div class="conc-card-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></div>
+        <h3>Инфраструктура и транспорт</h3>
+        <p>Современное Октябрьское Поле — это район с развитой инфраструктурой. Здесь есть торговые центры («Пятая Авеню», «Хорошо!»), кафе и рестораны, культурные объекты (Галерея «Ходынка», Дом романса). Транспортная доступность обеспечивается станцией метро «Октябрьское поле» (открыта в 1972 г.) и развитой сетью наземного транспорта. Рядом находятся крупные магистрали, но в часы пик возможны пробки.</p>
+      </div>
+      <div class="conc-card">
+        <div class="conc-card-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zM12 6v6l4 2"/></svg></div>
+        <h3>Личная характеристика</h3>
+        <p>Октябрьское поле — практичный, обжитой и достаточно спокойный район. Он сочетает в себе старую застройку, современные жилые комплексы и зеленые зоны, что делает его комфортным для жизни. Район подходит для семей, студентов и работающих людей, которые ценят удобное расположение, наличие необходимых объектов рядом с домом и возможность быстро добраться до центра Москвы.</p>
+      </div>
+    </div>
+    <div class="conclusion-final">
+      <p>В целом Октябрьское поле производит впечатление удобного и благоприятного для проживания района. Его сильные стороны — метро, хорошая инфраструктура, наличие зелёных зон и близость к центру. Основные минусы — пробки, шум на крупных улицах, разнородное состояние домов и дворов. Несмотря на отдельные недостатки, я считаю Октябрьское поле удачным вариантом для жизни в Москве, особенно для семей, студентов и работающих людей, которым важны транспортная доступность и наличие необходимых объектов рядом с домом.</p>
+    </div>
+  </section>
+
+  <div class="garland" aria-hidden="true"></div>
+
+  <!-- 13. ВИКТОРИНА -->
+  <section id="quiz" class="fade">
+    <h2 class="section-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9.1 9a3 3 0 015.8 1c0 2-3 2-3 4M12 17h.01M12 22a10 10 0 100-20 10 10 0 000 20z"/></svg>
+      Проверим как вам запомнилась информация 😊
+    </h2>
+    <p class="section-lead">Выберите уровень сложности и проверьте свои знания.</p>
+
+    <div class="quiz-levels" id="quizLevels">
+      <button class="level-btn active" data-level="basic">Базовый</button>
+      <button class="level-btn" data-level="advanced">Продвинутый</button>
+      <button class="level-btn" data-level="expert">Эксперт</button>
+    </div>
+
+    <div class="quiz-wrap">
+      <div id="quizPlay">
+        <div class="quiz-progress-text" id="quizProgressText">Вопрос 1 из 8</div>
+        <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quizProgressFill"></div></div>
+        <div class="quiz-question" id="quizQuestion"></div>
+        <div class="quiz-options" id="quizOptions"></div>
+        <div class="quiz-explain" id="quizExplain"></div>
+        <div class="quiz-nav"><button class="btn hidden" id="quizNext">Далее</button></div>
+      </div>
+      <div id="quizResult" class="quiz-result hidden">
+        <div class="score" id="quizScore">0 / 8</div>
+        <p id="quizVerdict"></p>
+        <button class="btn" id="quizRestart">Пройти заново</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="garland" aria-hidden="true"></div>
+
+  <!-- 14. КАРТА -->
+  <section id="map" class="fade">
+    <h2 class="section-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      Карта района
+    </h2>
+    <p class="section-lead">Интерактивная карта Октябрьского Поля и окрестностей. Приближайте, отдаляйте и исследуйте инфраструктуру района.</p>
+    <div class="map-container">
+      <iframe src="https://yandex.ru/map-widget/v1/?ll=37.495325%2C55.793912&z=15.5" frameborder="0" allowfullscreen="true"></iframe>
+    </div>
+  </section>
+
+  <div class="garland" aria-hidden="true"></div>
+
+  <!-- 15. ОТЗЫВЫ -->
+  <section id="feedback" class="fade">
+    <h2 class="section-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      Оставь свой след
+    </h2>
+    <p class="section-lead">Поделитесь впечатлением о районе или задайте вопрос. Ваш отзыв сохранится на этом устройстве.</p>
+
+    <div class="feedback-form">
+      <input type="text" id="review-name" placeholder="Ваше имя" maxlength="50">
+      <textarea id="review-text" placeholder="Ваш отзыв или вопрос..." maxlength="500"></textarea>
+      <button class="btn" id="review-submit" style="width:100%;">Отправить</button>
+    </div>
+
+    <div class="reviews-list" id="reviews-list"></div>
+  </section>
+
+  <footer>
+    <div class="footer-content">2026</div>
+    <div class="bottom-branch" aria-hidden="true">
+      <svg viewBox="0 0 1440 150" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="branchGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#3e2723"/><stop offset="50%" stop-color="#5d4037"/><stop offset="100%" stop-color="#3e2723"/></linearGradient>
+          <linearGradient id="leafRed" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#d84315"/><stop offset="100%" stop-color="#8e0000"/></linearGradient>
+          <linearGradient id="leafOrange" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ff9800"/><stop offset="100%" stop-color="#e65100"/></linearGradient>
+          <linearGradient id="leafGold" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ffc107"/><stop offset="100%" stop-color="#ff6f00"/></linearGradient>
+          <linearGradient id="leafBrown" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#a1887f"/><stop offset="100%" stop-color="#5d4037"/></linearGradient>
+        </defs>
+        <path d="M-20,110 Q200,90 400,105 T800,100 T1100,115 T1460,95" stroke="url(#branchGrad)" stroke-width="8" fill="none" stroke-linecap="round"/>
+        <path d="M150,100 Q180,70 200,60" stroke="url(#branchGrad)" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <path d="M350,105 Q380,80 400,60" stroke="url(#branchGrad)" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <path d="M600,100 Q630,75 650,55" stroke="url(#branchGrad)" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <path d="M850,100 Q880,75 900,55" stroke="url(#branchGrad)" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <path d="M1050,110 Q1080,85 1100,65" stroke="url(#branchGrad)" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <path d="M1250,105 Q1280,80 1300,60" stroke="url(#branchGrad)" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <g transform="translate(140, 65) rotate(-15)"><path d="M0,0 L-8,-12 L-4,-12 L-12,-22 L-5,-20 L-8,-30 L0,-22 L8,-30 L5,-20 L12,-22 L4,-12 L8,-12 Z" fill="url(#leafRed)" stroke="#5a0000" stroke-width="1" opacity="0.9"/><path d="M0,0 L0,-25 M0,-8 L-7,-16 M0,-8 L7,-16" stroke="#5a0000" stroke-width="0.5" fill="none"/></g>
+        <g transform="translate(200, 55) rotate(20)"><path d="M0,0 Q-6,-5 -8,-12 Q-10,-18 -6,-22 Q-2,-26 0,-30 Q2,-26 6,-22 Q10,-18 8,-12 Q6,-5 0,0 Z" fill="url(#leafOrange)" stroke="#bf360c" stroke-width="1" opacity="0.9"/><path d="M0,0 L0,-28 M0,-10 L-5,-16 M0,-10 L5,-16 M0,-20 L-4,-24 M0,-20 L4,-24" stroke="#bf360c" stroke-width="0.5" fill="none"/></g>
+        <g transform="translate(280, 60) rotate(-30)"><path d="M0,0 L-8,-12 L-4,-12 L-12,-22 L-5,-20 L-8,-30 L0,-22 L8,-30 L5,-20 L12,-22 L4,-12 L8,-12 Z" fill="url(#leafGold)" stroke="#bf360c" stroke-width="1" opacity="0.9"/><path d="M0,0 L0,-25 M0,-8 L-7,-16 M0,-8 L7,-16" stroke="#bf360c" stroke-width="0.5" fill="none"/></g>
+        <g transform="translate(360, 65) rotate(10)"><path d="M0,0 Q-5,-8 -8,-15 Q-10,-20 -5,-25 Q-2,-28 0,-32 Q2,-28 5,-25 Q10,-20 8,-15 Q5,-8 0,0 Z" fill="url(#leafBrown)" stroke="#3e2723" stroke-width="1" opacity="0.9"/><path d="M0,0 L0,-30 M0,-12 L-4,-18 M0,-12 L4,-18" stroke="#3e2723" stroke-width="0.5" fill="none"/></g>
+        <g transform="translate(460, 60) rotate(-45)"><path d="M0,0 L-8,-12 L-4,-12 L-12,-22 L-5,-20 L-8,-30 L0,-22 L8,-30 L5,-20 L12,-22 L4,-12 L8,-12 Z" fill="url(#leafRed)" stroke="#5a0000" stroke-width="1" opacity="0.9"/><path d="M0,0 L0,-25 M0,-8 L-7,-16 M0,-8 L7,-16" stroke="#5a0000" stroke-width="0.5" fill="none"/></g>
+        <g transform="translate(550, 55) rotate(25)"><path d="M0,0 Q-6,-5 -8,-12 Q-10,-18 -6,-22 Q-2,-26 0,-30 Q2,-26 6,-22 Q10,-18 8,-12 Q6,-5 0,0 Z" fill="url(#leafOrange)" stroke="#bf360c" stroke-width="1" opacity="0.9"/><path d="M0,0 L0,-28 M0,-10 L-5,-16 M0,-10 L5,-16 M0,-20 L-4,-24 M0,-20 L4,-24" stroke="#bf360c" stroke-width="0.5" fill="none"/></g>
+        <g transform="translate(650, 60) rotate(-20)"><path d="M0,0 L-8,-12 L-4,-12 L-12,-22 L-5,-20 L-8,-30 L0,-22 L8,-30 L5,-20 L12,-22 L4,-12 L8,-12 Z" fill="url(#leafGold)" stroke="#bf360c" stroke-width="1" opacity="0.9"/><path d="M0,0 L0,-25 M0,-8 L-7,-16 M0,-8 L7,-16" stroke="#bf360c" stroke-width="0.5" fill="none"/></g>
+        <g transform="translate(750, 55) rotate(35)"><path d="M0,0 Q-5,-8 -8,-15 Q-10,-20 -5,-25 Q-2,-28 0,-32 Q2,-28 5,-25 Q10,-20 8,-15 Q5,-8 0,0 Z" fill="url(#leafBrown)" stroke="#3e2723" stroke-width="1" opacity="0.9"/><path d="M0,0 L0,-30 M0,-12 L-4,-18 M0,-12 L4,-18" stroke="#3e2723" stroke-width="0.5" fill="none"/></g>
+        <g transform="translate(850, 60) rotate(-10)"><path d="M0,0 L-8,-12 L-4,-12 L-12,-22 L-5,-20 L-8,-30 L0,-22 L8,-30 L5,-20 L12,-22 L4,-12 L8,-12 Z" fill="url(#leafRed)" stroke="#5a0000" stroke-width="1" opacity="0.9"/><path d="M0,0 L0,-25 M0,-8 L-7,-16 M0,-8 L7,-16" stroke="#5a0000" stroke-width="0.5" fill="none"/></g>
+        <g transform="translate(950, 65) rotate(20)"><path d="M0,0 Q-6,-5 -8,-12 Q-10,-18 -6,-22 Q-2,-26 0,-30 Q2,-26 6,-22 Q10,-18 8,-12 Q6,-5 0,0 Z" fill="url(#leafOrange)" stroke="#bf360c" stroke-width="1" opacity="0.9"/><path d="M0,0 L0,-28 M0,-10 L-5,-16 M0,-10 L5,-16 M0,-20 L-4,-24 M0,-20 L4,-24" stroke="#bf360c" stroke-width="0.5" fill="none"/></g>
+        <g transform="translate(1050, 60) rotate(-30)"><path d="M0,0 L-8,-12 L-4,-12 L-12,-22 L-5,-20 L-8,-30 L0,-22 L8,-30 L5,-20 L12,-22 L4,-12 L8,-12 Z" fill="url(#leafGold)" stroke="#bf360c" stroke-width="1" opacity="0.9"/><path d="M0,0 L0,-25 M0,-8 L-7,-16 M0,-8 L7,-16" stroke="#bf360c" stroke-width="0.5" fill="none"/></g>
+        <g transform="translate(1150, 65) rotate(10)"><path d="M0,0 Q-5,-8 -8,-15 Q-10,-20 -5,-25 Q-2,-28 0,-32 Q2,-28 5,-25 Q10,-20 8,-15 Q5,-8 0,0 Z" fill="url(#leafBrown)" stroke="#3e2723" stroke-width="1" opacity="0.9"/><path d="M0,0 L0,-30 M0,-12 L-4,-18 M0,-12 L4,-18" stroke="#3e2723" stroke-width="0.5" fill="none"/></g>
+        <g transform="translate(1250, 60) rotate(-45)"><path d="M0,0 L-8,-12 L-4,-12 L-12,-22 L-5,-20 L-8,-30 L0,-22 L8,-30 L5,-20 L12,-22 L4,-12 L8,-12 Z" fill="url(#leafRed)" stroke="#5a0000" stroke-width="1" opacity="0.9"/><path d="M0,0 L0,-25 M0,-8 L-7,-16 M0,-8 L7,-16" stroke="#5a0000" stroke-width="0.5" fill="none"/></g>
+        <g transform="translate(1350, 55) rotate(25)"><path d="M0,0 Q-6,-5 -8,-12 Q-10,-18 -6,-22 Q-2,-26 0,-30 Q2,-26 6,-22 Q10,-18 8,-12 Q6,-5 0,0 Z" fill="url(#leafOrange)" stroke="#bf360c" stroke-width="1" opacity="0.9"/><path d="M0,0 L0,-28 M0,-10 L-5,-16 M0,-10 L5,-16 M0,-20 L-4,-24 M0,-20 L4,-24" stroke="#bf360c" stroke-width="0.5" fill="none"/></g>
+      </svg>
+    </div>
+  </footer>
+</div>
+
+<!-- МОДАЛЬНОЕ ОКНО ДЛЯ КАРТОЧЕК -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal-content" id="modal-content">
+    <button class="modal-close" id="modal-close">&times;</button>
+    <div class="modal-layout">
+      <div class="modal-text" id="modal-text-content"></div>
+      <div class="modal-image-side" id="modal-image-container"></div>
+    </div>
+  </div>
+</div>
+
+<!-- МОДАЛЬНОЕ ОКНО ДЛЯ ЛИЧНОСТЕЙ -->
+<div class="person-detail-modal" id="person-detail-modal">
+  <div class="person-detail-card">
+    <button class="person-detail-close" id="person-detail-close">&times;</button>
+    <div class="person-detail-layout">
+      <div class="person-detail-text">
+        <h3 id="person-detail-title"></h3>
+        <div class="detail-years" id="person-detail-years"></div>
+        <div id="person-detail-body"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- МОДАЛЬНОЕ ОКНО ИЗБРАННОГО -->
+<div class="modal-overlay" id="fav-modal">
+  <div class="modal-content" style="max-width:600px;">
+    <button class="modal-close" id="fav-close">&times;</button>
+    <h3 style="color:var(--winter); margin-bottom:20px;">⭐ Избранное</h3>
+    <div id="fav-list"></div>
+  </div>
+</div>
+
+<script>
+// ==========================================
+// ВЕСЬ JAVASCRIPT КОД
+// ==========================================
+
+/* ============ 1. ТЕМА (ТУМБЛЕР) ============ */
+(function(){
+  const toggle = document.getElementById('theme-toggle');
+  const body = document.body;
+  if (localStorage.getItem('theme') === 'light') {
+    body.classList.add('light-theme');
+  }
+  toggle.addEventListener('click', () => {
+    body.classList.toggle('light-theme');
+    const isLight = body.classList.contains('light-theme');
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  });
+})();
+
+/* ============ 2. РЕЖИМ БЕЗ КАРТИНОК ============ */
+(function(){
+  const btn = document.getElementById('no-images-toggle');
+  const body = document.body;
+  if (localStorage.getItem('noImages') === 'true') {
+    body.classList.add('no-images');
+    btn.classList.add('active');
+  }
+  btn.addEventListener('click', () => {
+    body.classList.toggle('no-images');
+    const isOff = body.classList.contains('no-images');
+    btn.classList.toggle('active', isOff);
+    localStorage.setItem('noImages', isOff);
+  });
+})();
+
+/* ============ 3. ЧАСТИЦЫ (СНЕГ/ЛИСТЬЯ) С ВЫБОРОМ ============ */
+(function(){
+  const field = document.getElementById('particle-field');
+  const controls = document.querySelectorAll('#precip-controls span');
+  let currentMode = 'both'; // 'both', 'leaf', 'snow'
+  
+  function createParticles() {
+    field.innerHTML = ''; // Очищаем поле
+    const count = 20;
+    
+    for(let i=0; i<count; i++){
+      // Определяем тип частицы в зависимости от режима
+      let type = 'leaf';
+      if (currentMode === 'leaf') type = 'leaf';
+      else if (currentMode === 'snow') type = 'snow';
+      else type = Math.random() > 0.5 ? 'leaf' : 'snow'; // both
+      
+      const p = document.createElement('div');
+      p.className = 'particle ' + type;
+      p.innerHTML = type === 'leaf' ? '🍁' : '❄';
+      p.style.left = Math.random() * 100 + 'vw';
+      p.style.animationDuration = (Math.random() * 10 + 10) + 's';
+      p.style.animationDelay = Math.random() * 10 + 's';
+      p.style.fontSize = (Math.random() * 15 + 10) + 'px';
+      field.appendChild(p);
+    }
+  }
+  
+  // Обновление активных классов на иконках
+  function updateControls() {
+    controls.forEach(c => {
+      c.classList.remove('active-precip');
+      if (currentMode === 'both') {
+        c.classList.add('active-precip');
+      } else if (c.dataset.type === currentMode) {
+        c.classList.add('active-precip');
+      }
+    });
+  }
+
+  // Инициализация (смешанный режим)
+  createParticles();
+
+  // Обработка кликов по иконкам
+  controls.forEach(ctrl => {
+    ctrl.addEventListener('click', (e) => {
+      e.stopPropagation(); // Чтобы не сработал клик по hero
+      const type = ctrl.dataset.type;
+      
+      if (currentMode === type) {
+        // Если кликнули на уже активный - сбрасываем на смешанный
+        currentMode = 'both';
+      } else {
+        // Иначе включаем только этот тип
+        currentMode = type;
+      }
+      
+      updateControls();
+      createParticles();
+    });
+  });
+
+  // Клик вне иконок сбрасывает на смешанный режим (по желанию)
+  // document.addEventListener('click', () => {
+  //   if (currentMode !== 'both') {
+  //     currentMode = 'both';
+  //     updateControls();
+  //     createParticles();
+  //   }
+  // });
+})();
+
+/* ============ 4. ГЕРОЙ / СТАРТ ============ */
+(function(){
+  const startBtn = document.getElementById('start-btn');
+  const collapseBtn = document.getElementById('collapse-btn');
+  const hero = document.getElementById('hero-section');
+  const mainContent = document.getElementById('main-content');
+  const breadcrumbs = document.getElementById('breadcrumbs');
+
+  if(startBtn){
+    startBtn.addEventListener('click', () => {
+      hero.classList.add('collapsed');
+      startBtn.classList.add('hidden');
+      collapseBtn.classList.remove('hidden');
+      mainContent.style.display = 'block';
+      setTimeout(() => {
+        mainContent.classList.add('visible');
+        breadcrumbs.classList.add('visible');
+        document.getElementById('history').scrollIntoView({behavior: 'smooth'});
+      }, 100);
+    });
+  }
+  
+  if(collapseBtn){
+    collapseBtn.addEventListener('click', () => {
+      hero.classList.remove('collapsed');
+      collapseBtn.classList.add('hidden');
+      startBtn.classList.remove('hidden');
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    });
+  }
+})();
+
+/* ============ 5. СКРОЛЛ / FADE ============ */
+(function(){
+  const faders = document.querySelectorAll('.fade');
+  const breadcrumbs = document.getElementById('breadcrumbs');
+  const currentCrumb = document.getElementById('breadcrumb-current');
+  
+  const appearOptions = { threshold: 0.15, rootMargin: "0px 0px -50px 0px" };
+  const appearOnScroll = new IntersectionObserver(function(entries, observer){
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('visible');
+        const id = entry.target.id;
+        if(id && currentCrumb){
+          const titles = {
+            'history': 'История местности',
+            'streets': 'Улицы',
+            'persons': 'Личности',
+            'sights': 'Памятники',
+            'malls': 'Торговые центры',
+            'food': 'Кафе и рестораны',
+            'culture': 'Культура',
+            'route': 'Маршрут',
+            'daily-route': 'Маршрут на сегодня',
+            'facts': 'Факты',
+            'courtyard': 'Схема двориков',
+            'conclusion': 'Вывод',
+            'quiz': 'Викторина',
+            'map': 'Карта',
+            'feedback': 'Отзывы'
+          };
+          if(titles[id]) currentCrumb.textContent = titles[id];
+        }
+      }
+    });
+  }, appearOptions);
+  faders.forEach(fader => appearOnScroll.observe(fader));
+
+  window.addEventListener('scroll', () => {
+    if(window.scrollY > 300) breadcrumbs.classList.add('visible');
+    else breadcrumbs.classList.remove('visible');
+  });
+})();
+
+/* ============ 6. ТАЙМЛАЙН ============ */
+(function(){
+  const headers = document.querySelectorAll('.timeline-header');
+  headers.forEach(header => {
+    header.addEventListener('click', () => {
+      const item = header.parentElement;
+      item.classList.toggle('active');
+    });
+  });
+})();
+
+/* ============ 7. ТАБЫ УЛИЦ ============ */
+(function(){
+  const tabs = document.querySelectorAll('.tab');
+  const panels = document.querySelectorAll('.street-panel');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      panels.forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      const target = tab.dataset.target;
+      document.getElementById(target).classList.add('active');
+    });
+  });
+})();
+
+/* ============ 7.5. СКРЫТИЕ БЛОКА КАФЕ ============ */
+(function(){
+  const toggleBtn = document.getElementById('toggle-food-btn');
+  const wrapper = document.getElementById('food-wrapper');
+  
+  if (toggleBtn && wrapper) {
+    toggleBtn.addEventListener('click', () => {
+      wrapper.classList.toggle('collapsed');
+      toggleBtn.classList.toggle('collapsed');
+    });
+  }
+})();
+
+/* ============ 8. МОДАЛЬНЫЕ ОКНА (КАРТОЧКИ) ============ */
+(function(){
+  const overlay = document.getElementById('modal-overlay');
+  const content = document.getElementById('modal-content');
+  const modalText = document.getElementById('modal-text-content');
+  const modalImage = document.getElementById('modal-image-container');
+  const closeBtn = document.getElementById('modal-close');
+
+  const modalData = {
+    sight1: { title: "Памятник-танк Т-34", tag: "Мемориал", text: "Легендарный танк Т-34-85 установлен в сквере на пересечении улиц Маршала Бирюзова и Народного Ополчения. Посвящён 40-летию Победы в Великой Отечественной войне.", img: "images/sight-t34.jpg" },
+    sight2: { title: "Стела маршалу П. С. Рыбалко", tag: "Памятник", text: "Стела установлена в честь дважды Героя Советского Союза, маршала бронетанковых войск Павла Семёновича Рыбалко.", img: "images/sight-rybalko.jpg" },
+    sight3: { title: "Исторические ворота В/Ч 67748", tag: "Памятник", text: "Исторические ворота воинской части, напоминающие о военном прошлом Октябрьского Поля.", img: "images/sight-vorota.jpg" },
+    sight4: { title: "Храм иконы «Скоропослушница»", tag: "Храм", text: "Храм иконы Божией Матери «Скоропослушница» расположен на улице Маршала Рыбалко. Это одно из старейших исторических зданий района.", img: "images/sight-hram.jpg" },
+    mall1: { title: "ТЦ «Пятая Авеню»", tag: "ТЦ", text: "Современный торговый центр с магазинами, кафе и кинотеатром. Отличное место для шопинга и досуга.", img: "images/mall-5avenue.jpg" },
+    mall2: { title: "ТРЦ «Хорошо!»", tag: "ТРЦ", text: "Крупный торгово-развлекательный центр, где можно найти всё необходимое для покупок и развлечений.", img: "images/mall-horosho.jpg" },
+    food1: { title: "Botteganova", tag: "Итальянская кухня", text: "Уютный ресторан итальянской кухни с широким выбором пасты, пиццы и десертов.", img: "images/cafe-botteganova.jpg" },
+    food2: { title: "Примавера", tag: "Итальянская кухня", text: "Ресторан с атмосферой Италии, предлагающий блюда на любой вкус.", img: "images/cafe-primavera.jpg" },
+    food3: { title: "Cafe de Arts", tag: "Европейская кухня", text: "Кафе с европейской кухней и уютной атмосферой, идеально для завтрака или обеда.", img: "images/cafe-arts.jpg" },
+    food4: { title: "KVARTAL Green Garden", tag: "Ресторан", text: "Ресторан с разнообразным меню и приятным интерьером, подходит для встреч с друзьями и семейных ужинов.", img: "images/cafe-kvartal.jpg" },
+    cult1: { title: "Кинотеатр «Москино Юность»", tag: "Кино", text: "Кинотеатр с богатой историей, показывающий как новинки, так и классику кинематографа.", img: "images/cult-yunost.jpg" },
+    cult2: { title: "Галерея «Ходынка»", tag: "Арт", text: "Выставочный зал, где проходят выставки современного искусства и культурные мероприятия.", img: "images/gallery-khodynka.jpg" },
+    cult3: { title: "Культурный центр «Дом романса»", tag: "Музыка", text: "Центр, посвящённый жанру романса. Здесь проходят концерты, творческие вечера и встречи с артистами.", img: "images/dom-romansa.jpg" },
+    cult4: { title: "Музей самоцветов", tag: "Музей", text: "Музей, в котором представлена коллекция минералов, самоцветов и изделий из камня.", img: "images/cult-minerals.jpg" },
+    fact1: { title: "Парад с Лениным", tag: "История", text: "1 мая 1918 года на Ходынском поле (ныне Октябрьское) прошёл военный парад Красной армии, который принимал Владимир Ленин.", img: "images/parad-lenin.jpg" },
+    fact2: { title: "«Немецкие дворики»", tag: "Архитектура", text: "Квартал малоэтажных домов, построенный в 1948–1952 годах под руководством архитектора Д. Н. Чечулина. Неофициальное название — «Немецкие дворики».", img: "images/german-courtyards.jpg" },
+    fact3: { title: "Родина радио «Наше»", tag: "Культура", text: "Радиостанция «Наше радио» начала вещание именно с Октябрьского Поля, что делает район значимым для музыкальной культуры.", img: "images/radio-nashe.jpg" },
+    fact4: { title: "Улица Военное Поле", tag: "Топонимия", text: "Название улицы напоминает о том, что раньше эта территория называлась Военным полем и была частью Ходынского поля.", img: "images/street-voennoe-pole.jpg" }
+  };
+
+  document.querySelectorAll('.infra-card').forEach(card => {
+    card.addEventListener('click', (e) => {
+      if(e.target.closest('.fav-btn')) return;
+      const id = card.dataset.modal;
+      if(id && modalData[id]){
+        const data = modalData[id];
+        modalText.innerHTML = `<span class="modal-tag">${data.tag}</span><h3>${data.title}</h3><p>${data.text}</p>`;
+        if(data.img){
+          modalImage.innerHTML = `<img src="${data.img}" alt="${data.title}" onerror="this.style.display='none'">`;
+        } else {
+          modalImage.innerHTML = '';
+        }
+        overlay.classList.add('active');
+      }
+    });
+  });
+
+  if(closeBtn){
+    closeBtn.addEventListener('click', () => overlay.classList.remove('active'));
+  }
+  if(overlay){
+    overlay.addEventListener('click', (e) => {
+      if(e.target === overlay) overlay.classList.remove('active');
+    });
+  }
+})();
+
+/* ============ 9. ЛИЧНОСТИ ============ */
+(function(){
+  const modal = document.getElementById('person-detail-modal');
+  const closeBtn = document.getElementById('person-detail-close');
+  const titleEl = document.getElementById('person-detail-title');
+  const yearsEl = document.getElementById('person-detail-years');
+  const bodyEl = document.getElementById('person-detail-body');
+
+  const personData = {
+    birAcc: {
+      title: "Сергей Семёнович Бирюзов",
+      years: "1904–1964",
+      body: "<p>Сергей Семёнович Бирюзов — выдающийся советский военачальник, Маршал Советского Союза (1955), Герой Советского Союза (1958).</p><p>Занимал ключевые посты — в том числе главнокомандующего войсками ПВО, главнокомандующего Ракетными войсками стратегического назначения, а в 1963–1964 годах был начальником Генерального штаба — первым заместителем министра обороны СССР.</p><p>Награждён пятью орденами Ленина, орденами Суворова, Кутузова, Богдана Хмельницкого и другими советскими и иностранными наградами.</p>"
+    },
+    sokAcc: {
+      title: "Василий Данилович Соколовский",
+      years: "1897–1968",
+      body: "<p>Василий Данилович Соколовский — Маршал Советского Союза (1946), Герой Советского Союза (1945).</p><p><strong>Ключевая роль — в штабе Западного фронта:</strong></p><ul><li><strong>Оборона Москвы и контрнаступление.</strong> Как начальник штаба Западного фронта, участвовал в планировании обороны и контрнаступления под Москвой; Г. К. Жуков особо отмечал чёткую работу штаба под руководством Соколовского.</li><li><strong>Ржевско‑Вяземская, Орловская («Кутузов») и Смоленская операции.</strong> Командуя Западным фронтом в 1943 году, провёл успешные наступательные действия, в том числе освобождение Ржева, Орла и Смоленска.</li><li><strong>Берлинская операция.</strong> В 1945 году — первый заместитель командующего 1‑м Белорусским фронтом (Г. К. Жукова), фактически руководил действиями в центре Берлина; участвовал в переговорах капитуляции гарнизона города.</li></ul><p><strong>Послевоенная служба.</strong></p><ul><li>В 1946–1949 годах — главнокомандующий Группой советских войск в Германии и глава советской военной администрации в стране.</li><li>С 1952 года — начальник Генерального штаба — первый заместитель министра обороны СССР. Занимался вопросами реорганизации армии и стратегического планирования.</li></ul>"
+    },
+    konAcc: {
+      title: "Иван Степанович Конев",
+      years: "1897–1973",
+      body: "<p>Иван Степанович Конев — выдающийся полководец, Маршал Советского Союза (1944), дважды Герой Советского Союза.</p><ul><li><strong>Оборона Москвы и освобождение Калинина.</strong> Возглавляя Калининский фронт, сыграл важную роль в срыве немецкого наступления на столицу и в освобождении города Калинина (ныне Тверь).</li><li><strong>Курская битва.</strong> Войска Степного фронта под командованием Конева успешно развивали контрнаступление после оборонительных боёв.</li><li><strong>Корсунь‑Шевченковская операция (1944).</strong> Одна из самых ярких побед Конева: окружение и разгром крупной группировки противника; за эту операцию он получил звание Маршала Советского Союза.</li><li><strong>Висло‑Одерская, Берлинская и Пражская операции.</strong> В 1945 году войска 1‑го Украинского фронта под его началом стремительно продвигались вперёд, освобождая Польшу, участвуя в штурме Берлина и завершив войну освобождением Праги.</li></ul>"
+    }
+  };
+
+  document.querySelectorAll('.acc-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.acc;
+      if(id && personData[id]){
+        const data = personData[id];
+        titleEl.textContent = data.title;
+        yearsEl.textContent = data.years;
+        bodyEl.innerHTML = data.body;
+        modal.classList.add('active');
+        btn.classList.add('open');
+      }
+    });
+  });
+
+  if(closeBtn){
+    closeBtn.addEventListener('click', () => {
+      modal.classList.remove('active');
+      document.querySelectorAll('.acc-btn').forEach(b => b.classList.remove('open'));
+    });
+  }
+  if(modal){
+    modal.addEventListener('click', (e) => {
+      if(e.target === modal){
+        modal.classList.remove('active');
+        document.querySelectorAll('.acc-btn').forEach(b => b.classList.remove('open'));
+      }
+    });
+  }
+})();
+
+/* ============ 10. МАРШРУТ НА СЕГОДНЯ (КАРТА) ============ */
+(function(){
+  const btn = document.getElementById('daily-btn');
+  const resultContainer = document.getElementById('daily-result');
+  const mapContainer = document.getElementById('daily-map');
+  const textContainer = document.getElementById('daily-text');
+  
+  const points = [
+    { name: "Станция метро «Октябрьское поле»", coords: "55.793211,37.493836" },
+    { name: "Памятник-танк Т-34", coords: "55.792345,37.498765" },
+    { name: "«Немецкие дворики»", coords: "55.790123,37.501234" },
+    { name: "Храм «Скоропослушница»", coords: "55.788456,37.505678" },
+    { name: "ТЦ «Пятая Авеню»", coords: "55.794567,37.491234" },
+    { name: "ТРЦ «Хорошо!»", coords: "55.796789,37.489012" },
+    { name: "Галерея «Ходынка»", coords: "55.789012,37.512345" },
+    { name: "Дом романса", coords: "55.787654,37.498765" }
+  ];
+
+  if(btn){
+    btn.addEventListener('click', () => {
+      const shuffled = [...points].sort(() => 0.5 - Math.random());
+      const startPoint = shuffled[0];
+      const endPoint = shuffled[1];
+
+      const mapUrl = `https://yandex.ru/map-widget/v1/?rtext=${startPoint.coords}~${endPoint.coords}&rtt=pd&z=15`;
+
+      mapContainer.innerHTML = `<iframe src="${mapUrl}" frameborder="0" allowfullscreen="true"></iframe>`;
+
+      textContainer.innerHTML = `
+        <p>Ваш случайный пешеходный маршрут на сегодня:</p>
+        <p><strong>От:</strong> ${startPoint.name}<br><strong>До:</strong> ${endPoint.name}</p>
+        <p>Приятной прогулки! Карта с маршрутом построена выше.</p>
+      `;
+
+      resultContainer.classList.add('visible');
+    });
+  }
+})();
+
+/* ============ 11. ОТЗЫВЫ (УМНАЯ ФИЛЬТРАЦИЯ) ============ */
+(function(){
+  const nameInput = document.getElementById('review-name');
+  const textInput = document.getElementById('review-text');
+  const submitBtn = document.getElementById('review-submit');
+  const reviewsList = document.getElementById('reviews-list');
+
+  // Список "плохих" слов (можно расширять)
+  const badWords = ['дурак', 'плохо', 'ужас', 'отстой', 'говно', 'хуй', 'бля', 'пиздец'];
+
+  // Проверка на негатив
+  function isNegative(text) {
+    const lowerText = text.toLowerCase();
+    return badWords.some(word => lowerText.includes(word));
+  }
+
+  function loadReviews() {
+    if(!reviewsList) return;
+    const saved = localStorage.getItem('reviews');
+    if(!saved) return;
+    
+    const reviews = JSON.parse(saved);
+    reviewsList.innerHTML = '';
+    
+    // Отображаем только хорошие отзывы
+    reviews.reverse().forEach(r => {
+      if (!isNegative(r.text)) {
+        const div = document.createElement('div');
+        div.className = 'review-item';
+        div.innerHTML = `<div class="review-author">${r.name}</div><div class="review-date">${r.date}</div><div class="review-text">${r.text}</div>`;
+        reviewsList.appendChild(div);
+      }
+    });
+  }
+
+  if(submitBtn){
+    submitBtn.addEventListener('click', () => {
+      const name = nameInput.value.trim();
+      const text = textInput.value.trim();
+      if(!name || !text) return;
+      
+      const saved = localStorage.getItem('reviews');
+      const reviews = saved ? JSON.parse(saved) : [];
+      
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+      
+      // Сохраняем всё, но фильтруем при отображении
+      reviews.push({ name, text, date: dateStr });
+      localStorage.setItem('reviews', JSON.stringify(reviews));
+      
+      nameInput.value = '';
+      textInput.value = '';
+      loadReviews();
+    });
+  }
+  loadReviews();
+})();
+
+/* ============ 12. СХЕМА ДВОРИКОВ ============ */
+(function(){
+  const houses = document.querySelectorAll('.courtyard-map .house');
+  const info = document.getElementById('courtyard-info');
+  
+  const houseInfo = {
+    "1": { title: "Дом 1", desc: "Малоэтажный жилой дом, построенный в 1948–1952 гг. в стиле сталинского неоклассицизма." },
+    "2": { title: "Дом 2", desc: "Уютный дом с зелёным двором, типичный для застройки Октябрьского Поля." },
+    "3": { title: "Дом 3", desc: "Историческое здание, сохранившее облик послевоенной Москвы." },
+    "4": { title: "Дом 4", desc: "Дом с характерным архитектурным обликом «Немецких двориков»." },
+    "5": { title: "Дом 5", desc: "Жилой дом с просторными квартирами и высокими потолками." },
+    "6": { title: "Дом 6", desc: "Один из домов, входящих в комплекс малоэтажной застройки." },
+    "7": { title: "Дом 7", desc: "Дом с зелёным внутренним двором, любимый местными жителями." },
+    "8": { title: "Дом 8", desc: "Постройка послевоенного периода с элементами неоклассицизма." },
+    "9": { title: "Дом 9", desc: "Жилой дом, часть исторического квартала." },
+    "10": { title: "Дом 10", desc: "Уютный малоэтажный дом с благоустроенной территорией." },
+    "11": { title: "Дом 11", desc: "Историческое здание в стиле сталинского ампира." },
+    "12": { title: "Дом 12", desc: "Завершает квартал «Немецких двориков», сохраняя атмосферу прошлого." }
+  };
+
+  houses.forEach(house => {
+    house.addEventListener('click', () => {
+      const id = house.dataset.house;
+      if(id && houseInfo[id]){
+        info.classList.remove('empty');
+        info.innerHTML = `<h4>${houseInfo[id].title}</h4><p>${houseInfo[id].desc}</p>`;
+      }
+    });
+  });
+})();
+
+/* ============ 13. ВИКТОРИНА (УСЛОЖНЕННАЯ) ============ */
+(function(){
+  const quizData = {
+    basic: [
+      { q: "Как называлось Октябрьское Поле до 1922 года?", options: ["Ходынское поле", "Военное поле", "Соколиная гора", "Покровское-Стрешнево"], correct: 1, explain: "До 1922 года территория называлась Военным полем." },
+      { q: "В каком году была открыта станция метро «Октябрьское поле»?", options: ["1965", "1972", "1975", "1980"], correct: 1, explain: "Станция метро открылась 30 декабря 1972 года." },
+      { q: "В честь кого названа улица Маршала Бирюзова?", options: ["С. С. Бирюзова", "В. Д. Соколовского", "И. С. Конева", "Г. К. Жукова"], correct: 0, explain: "Улица названа в честь Маршала Советского Союза С. С. Бирюзова." },
+      { q: "Какие дворики находятся на Октябрьском Поле?", options: ["Французские", "Немецкие", "Итальянские", "Испанские"], correct: 1, explain: "Квартал малоэтажной застройки неофициально называют «Немецкими двориками»." },
+      { q: "Какой памятник установлен на пересечении улиц Маршала Бирюзова и Народного Ополчения?", options: ["Танк Т-34", "Самолёт", "Пушка", "БТР"], correct: 0, explain: "Там установлен легендарный танк Т-34-85." },
+      { q: "Кто был архитектором «Немецких двориков»?", options: ["Д. Н. Чечулин", "А. В. Щусев", "К. С. Мельников", "И. В. Жолтовский"], correct: 0, explain: "Квартал был построен под руководством архитектора Д. Н. Чечулина." },
+      { q: "Какое прежнее название было у улицы Маршала Соколовского?", options: ["2-я улица Октябрьского Поля", "6-я улица Октябрьского Поля", "3-я улица Октябрьского Поля", "1-я улица Октябрьского Поля"], correct: 0, explain: "Улица Маршала Соколовского раньше называлась 2-й улицей Октябрьского Поля." },
+      { q: "В каком году прошёл военный парад с участием Ленина на Военном поле?", options: ["1914", "1918", "1921", "1925"], correct: 1, explain: "Парад прошёл 1 мая 1918 года." }
+    ],
+    advanced: [
+      { q: "В каком году улица Маршала Бирюзова была продлена до площади Академика Курчатова?", options: ["1960", "1965", "1966", "1970"], correct: 2, explain: "Это произошло в 1966 году." },
+      { q: "Какой институт находится на улице Маршала Соколовского?", options: ["Институт музыки имени Шнитке", "Курчатовский институт", "Институт географии", "Институт физики"], correct: 0, explain: "На улице расположен Институт музыки имени А. Г. Шнитке." },
+      { q: "Сколько улиц Октябрьского Поля было создано в 1948 году?", options: ["5", "8", "10", "12"], correct: 2, explain: "Были созданы номерные улицы с 1-й по 10-ю." },
+      { q: "Какой храм находится на улице Маршала Рыбалко?", options: ["Храм Христа Спасителя", "Храм иконы «Скоропослушница»", "Храм Николая Чудотворца", "Храм Сергия Радонежского"], correct: 1, explain: "Там находится Храм иконы Божией Матери «Скоропослушница»." },
+      { q: "В каком году Ходынское поле было переименовано в Октябрьское?", options: ["1917", "1918", "1921", "1922"], correct: 2, explain: "Это произошло в 1921 году." },
+      { q: "Как называлась железнодорожная станция, построенная в 1907 году на территории Военного поля?", options: ["Военное поле", "Октябрьское поле", "Ходынка", "Панфиловская"], correct: 0, explain: "Станция называлась «Военное поле»." },
+      { q: "В каком году улица Маршала Конева появилась на карте Москвы?", options: ["1965", "1968", "1973", "1975"], correct: 2, explain: "Улица появилась в 1973 году путём слияния двух проездов." },
+      { q: "Какой маршал командовал 1-м Украинским фронтом при освобождении Праги?", options: ["И. С. Конев", "Г. К. Жуков", "К. К. Рокоссовский", "Р. Я. Малиновский"], correct: 0, explain: "Прагу освобождали войска 1-го Украинского фронта под командованием И. С. Конева." }
+    ],
+    expert: [
+      { q: "Какой архитектор спроектировал вокзал станции «Военное поле» в 1907 году?", options: ["Александр Померанцев", "Дмитрий Чечулин", "Алексей Щусев", "Константин Мельников"], correct: 0, explain: "Вокзальное здание построил архитектор Александр Померанцев." },
+      { q: "В каком году С. С. Бирюзов стал начальником Генерального штаба?", options: ["1955", "1958", "1963", "1964"], correct: 2, explain: "Он занимал эту должность в 1963–1964 годах." },
+      { q: "Какую операцию провёл В. Д. Соколовский в 1943 году, командуя Западным фронтом?", options: ["Берлинскую", "Ржевско-Вяземскую", "Корсунь-Шевченковскую", "Висло-Одерскую"], correct: 1, explain: "Он провёл Ржевско-Вяземскую, Орловскую («Кутузов») и Смоленскую операции." },
+      { q: "За какую операцию И. С. Конев получил звание Маршала Советского Союза?", options: ["Битва за Москву", "Курская битва", "Корсунь-Шевченковская", "Берлинская"], correct: 2, explain: "Звание маршала он получил за Корсунь-Шевченковскую операцию в 1944 году." },
+      { q: "Сколько орденов Ленина было у С. С. Бирюзова?", options: ["Три", "Четыре", "Пять", "Шесть"], correct: 2, explain: "Он был награждён пятью орденами Ленина." },
+      { q: "Кто занимал должность главнокомандующего Группой советских войск в Германии в 1946–1949 годах?", options: ["Г. К. Жуков", "В. Д. Соколовский", "И. С. Конев", "С. С. Бирюзов"], correct: 1, explain: "С 1946 по 1949 год эту должность занимал В. Д. Соколовский." },
+      { q: "Какой фронт возглавлял И. С. Конев в период обороны Москвы?", options: ["Западный", "Калининский", "Брянский", "Резервный"], correct: 1, explain: "Он возглавлял Калининский фронт, сыграв важную роль в срыве наступления на столицу." },
+      { q: "В каком году была открыта станция метро «Октябрьское поле»?", options: ["1965", "1972", "1975", "1980"], correct: 1, explain: "Станция была открыта 30 декабря 1972 года." }
+    ]
+  };
+
+  let currentLevel = 'basic';
+  let currentQuestions = [];
+  let currentIndex = 0;
+  let score = 0;
+  let answered = false;
+
+  const questionEl = document.getElementById('quizQuestion');
+  const optionsEl = document.getElementById('quizOptions');
+  const explainEl = document.getElementById('quizExplain');
+  const nextBtn = document.getElementById('quizNext');
+  const progressText = document.getElementById('quizProgressText');
+  const progressFill = document.getElementById('quizProgressFill');
+  const playDiv = document.getElementById('quizPlay');
+  const resultDiv = document.getElementById('quizResult');
+  const scoreEl = document.getElementById('quizScore');
+  const verdictEl = document.getElementById('quizVerdict');
+  const restartBtn = document.getElementById('quizRestart');
+
+  function startQuiz(level) {
+    currentLevel = level;
+    currentQuestions = [...quizData[level]].sort(() => 0.5 - Math.random()).slice(0, 5);
+    currentIndex = 0;
+    score = 0;
+    playDiv.classList.remove('hidden');
+    resultDiv.classList.add('hidden');
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    if (currentIndex >= currentQuestions.length) {
+      finishQuiz();
+      return;
+    }
+    answered = false;
+    const q = currentQuestions[currentIndex];
+    progressText.textContent = `Вопрос ${currentIndex + 1} из ${currentQuestions.length}`;
+    progressFill.style.width = `${((currentIndex + 1) / currentQuestions.length) * 100}%`;
+    questionEl.textContent = q.q;
+    optionsEl.innerHTML = '';
+    explainEl.textContent = '';
+    nextBtn.classList.add('hidden');
+
+    q.options.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'quiz-option';
+      btn.textContent = opt;
+      btn.addEventListener('click', () => selectAnswer(i, btn));
+      optionsEl.appendChild(btn);
+    });
+  }
+
+  function selectAnswer(index, btn) {
+    if (answered) return;
+    answered = true;
+    const q = currentQuestions[currentIndex];
+    const allBtns = optionsEl.querySelectorAll('.quiz-option');
+    allBtns.forEach(b => b.disabled = true);
+    
+    if (index === q.correct) {
+      btn.classList.add('correct');
+      score++;
+    } else {
+      btn.classList.add('wrong');
+      allBtns[q.correct].classList.add('correct');
+    }
+    
+    explainEl.textContent = q.explain;
+    nextBtn.classList.remove('hidden');
+  }
+
+  if(nextBtn){
+    nextBtn.addEventListener('click', () => {
+      currentIndex++;
+      renderQuestion();
+    });
+  }
+
+  function finishQuiz() {
+    playDiv.classList.add('hidden');
+    resultDiv.classList.remove('hidden');
+    scoreEl.textContent = `${score} / ${currentQuestions.length}`;
+    if (score === currentQuestions.length) verdictEl.textContent = "Отлично! Вы настоящий знаток Октябрьского Поля!";
+    else if (score >= currentQuestions.length / 2) verdictEl.textContent = "Хороший результат! Вы много знаете о районе.";
+    else verdictEl.textContent = "Стоит перечитать факты и попробовать снова!";
+  }
+
+  if(restartBtn){
+    restartBtn.addEventListener('click', () => {
+      startQuiz(currentLevel);
+    });
+  }
+
+  document.querySelectorAll('.level-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      startQuiz(btn.dataset.level);
+    });
+  });
+
+  startQuiz('basic');
+})();
+
+/* ============ 14. ИЗБРАННОЕ ============ */
+(function(){
+  const favOpenBtn = document.getElementById('fav-open');
+  const favModal = document.getElementById('fav-modal');
+  const favClose = document.getElementById('fav-close');
+  const favList = document.getElementById('fav-list');
+  
+  let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+
+  function renderFavorites() {
+    if(!favList) return;
+    if(favorites.length === 0) {
+      favList.innerHTML = '<p style="color:var(--text-dim); text-align:center; padding:20px;">Пока ничего не добавлено в избранное.</p>';
+      return;
+    }
+    favList.innerHTML = '';
+    favorites.forEach(id => {
+      const card = document.querySelector(`[data-fav="${id}"]`);
+      let title = 'Элемент';
+      if(card) {
+        const h3 = card.closest('.infra-card')?.querySelector('h3');
+        if(h3) title = h3.textContent;
+      }
+      const div = document.createElement('div');
+      div.style.cssText = 'padding:12px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;';
+      div.innerHTML = `<span>${title}</span><button class="fav-remove" data-id="${id}" style="background:none; border:none; color:var(--autumn); cursor:pointer; font-size:18px;">✕</button>`;
+      favList.appendChild(div);
+    });
+    favList.querySelectorAll('.fav-remove').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = btn.dataset.id;
+        favorites = favorites.filter(f => f !== id);
+        localStorage.setItem('favorites', JSON.stringify(favorites));
+        updateFavBtns();
+        renderFavorites();
+      });
+    });
+  }
+
+  function updateFavBtns() {
+    document.querySelectorAll('.fav-btn').forEach(btn => {
+      const id = btn.dataset.fav;
+      if(favorites.includes(id)) {
+        btn.classList.add('active');
+        btn.textContent = '★';
+      } else {
+        btn.classList.remove('active');
+        btn.textContent = '☆';
+      }
+    });
+  }
+
+  document.querySelectorAll('.fav-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const id = btn.dataset.fav;
+      if(favorites.includes(id)) {
+        favorites = favorites.filter(f => f !== id);
+      } else {
+        favorites.push(id);
+      }
+      localStorage.setItem('favorites', JSON.stringify(favorites));
+      updateFavBtns();
+    });
+  });
+
+  if(favOpenBtn){
+    favOpenBtn.addEventListener('click', () => {
+      renderFavorites();
+      favModal.classList.add('active');
+    });
+  }
+  if(favClose){
+    favClose.addEventListener('click', () => favModal.classList.remove('active'));
+  }
+  if(favModal){
+    favModal.addEventListener('click', (e) => {
+      if(e.target === favModal) favModal.classList.remove('active');
+    });
+  }
+
+  updateFavBtns();
+})();
+</script>
+</body>
+</html>

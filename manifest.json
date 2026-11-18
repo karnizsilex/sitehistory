@@ -1,0 +1,13 @@
+{
+  "name": "История в названиях улиц: Октябрьское Поле",
+  "short_name": "Октябрьское Поле",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0a101a",
+  "theme_color": "#0a101a",
+  "lang": "ru",
+  "icons": [
+    { "src": "images/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "images/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
